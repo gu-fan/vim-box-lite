@@ -45,8 +45,8 @@ if !exists('s:ui_loaded')
         " http://wenq.org/wqy2/index.cgi?Download#MicroHei_Beta
         " set guifontwide=文泉驿等宽微米黑:h16
     elseif g:os.is_unix
-        set guifont=Droid\ Sans\ Mono\ Slashed\ for\ Powerline\ 14,Fixed\ 14
-        set guifontwide=Microsoft\ Yahei\ 14,WenQuanYi\ Zen\ Hei\ 14
+        set guifont=DejaVu\ Sans\ Mono\ 14
+        " set guifontwide=Microsoft\ Yahei\ 14,WenQuanYi\ Zen\ Hei\ 14
     endif
     set lazyredraw                  " only redraws if it is needed
 
