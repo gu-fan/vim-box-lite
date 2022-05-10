@@ -1,9 +1,10 @@
 Vimrc lite
 ===========
 
-My vimrc file
+My personal vimrc file
 
-simply use out of box
+Install
+-------
 
 1. download and put it somewhere::
 
@@ -25,3 +26,14 @@ simply use out of box
     :PlugInstall
 
 5. Done!
+
+Hints
+-----
+
+basic settings: basic.vim
+    settings, commands and mappings
+packages: plugin.vim
+ui settings: ui.vim
+    if missing fonts, see ui.vim and download the font
+
+works in windows/linux/macOS
