@@ -206,27 +206,37 @@ if g:os.is_windows
     xnoremap <C-A> <C-C>ggVG
 
 
+    set selectmode = 
 
 endif
 
 if g:os.is_linux
-    if has("clipboard")
-        " CTRL-X and SHIFT-Del are Cut
-        vnoremap <C-X> "+x
-        vnoremap <S-Del> "+x
+    source $VIMRUNTIME/mswin.vim
+    " Undo/Redo, add 'zv' to view redo/undo line
+    nor <C-Z>       uzv
+    ino <C-Z>       <C-O>u<C-O>zv
+    vno <C-Z>       <Nop>
 
-        " CTRL-C and CTRL-Insert are Copy
-        vnoremap <C-C> "+y
-        vnoremap <C-Insert> "+y
+    nor <C-Y>       <C-R>zv
+    ino <C-Y>       <C-O><C-R><C-O>zv
+    vno <C-Y>       <Nop>
 
-        " CTRL-V and SHIFT-Insert are Paste
-        map <C-V>		"+gP
-        map <S-Insert>		"+gP
+    nor <C-S-Z>       <C-R>zv
+    ino <C-S-Z>       <C-O><C-R><C-O>zv
+    vno <C-S-Z>       <Nop>
+    " CTRL-A is Select all: 
+    " change select mode to visual mode,
+    " except insert mode
+    noremap <C-A> ggVG
+    inoremap <C-A> <C-O>gg<C-O>gH<C-O>G
+    cnoremap <C-A> <C-C>ggVG
+    onoremap <C-A> <C-C>ggVG
+    snoremap <C-A> <C-C>ggVG
+    xnoremap <C-A> <C-C>ggVG
 
-        cmap <C-V>		<C-R>+
-        cmap <S-Insert>		<C-R>+
-    endif
+    set selectmode = 
 endif
+
 
 " search
 set incsearch                   " incremental searching
@@ -1052,14 +1062,12 @@ augroup help
 augroup END
 
 
-" let _search = require.at('search', expand('<sfile>:p'))
-
 nor   <F1>   K
 " nno   <s-F2> :%<C-R>=<SID>substitute(@/,"\x00")<CR><Left><Left><Left>
 " vno   <s-F2> :<C-R>=<SID>substitute(@/,"\x00")<CR><Left><Left><Left>
 " nno   <F2>   :%<C-R>=<SID>substitute(expand('<cword>'),"b")<CR><Left><Left><Left>
 " vno   <F2>   :<C-R>=<SID>substitute(expand('<cword>'),"b")<CR><Left><Left><Left>
-nno   <F2>     :%<C-R>=_search.generate(@/,"\x00")<CR><Left><Left><Left>
+nno   <F2>     :%<C-R>=search.generate(@/,"\x00")<CR><Left><Left><Left>
 vno   <F2>     :<C-R>=<SID>w(@/,"\x00")<CR><Left><Left><Left>
 nno   <S-F2>   :%<C-R>=<SID>w(expand('<cword>'),"b")<CR><Left><Left><Left>
 vno   <S-F2>   :<C-R>=<SID>w(expand('<cword>'),"b")<CR><Left><Left><Left>
@@ -1085,7 +1093,7 @@ nno <silent> <F4> :call <SID>toggle_nerdfind()<CR>
 nno <silent> <C-T> :call <SID>toggle_nerdfind()<CR>
 " nno <silent> <F5> :call <SID>exe("n")<CR>
 " vno <silent> <F5> :call <SID>exe("v")<CR>
-nno <silent> <D-r> :call <SID>exe("n")<CR>
+" nno <silent> <D-r> :call <SID>exe("n")<CR>
 nno <silent> <leader>rn :call <SID>exe("n")<CR>
 
 com! -nargs=0 Dir call <SID>file_man('')
@@ -1304,12 +1312,6 @@ fun! search.generate(word,mode) dict "{{{
     return "s/".ss."/".a:word. "/gc" 
 endfunction "}}}
 
-
-
-fun! search.test2() dict
-    echom 1111
-    return 1111
-endfun
 
 
 " Export search
