@@ -204,6 +204,28 @@ if g:os.is_windows
     onoremap <C-A> <C-C>ggVG
     snoremap <C-A> <C-C>ggVG
     xnoremap <C-A> <C-C>ggVG
+
+
+
+endif
+
+if g:os.is_linux
+    if has("clipboard")
+        " CTRL-X and SHIFT-Del are Cut
+        vnoremap <C-X> "+x
+        vnoremap <S-Del> "+x
+
+        " CTRL-C and CTRL-Insert are Copy
+        vnoremap <C-C> "+y
+        vnoremap <C-Insert> "+y
+
+        " CTRL-V and SHIFT-Insert are Paste
+        map <C-V>		"+gP
+        map <S-Insert>		"+gP
+
+        cmap <C-V>		<C-R>+
+        cmap <S-Insert>		<C-R>+
+    endif
 endif
 
 " search
@@ -931,6 +953,7 @@ nno <silent><C-W><C-T> :tab sp\|call <SID>edit_file(0)<CR>
 nno <silent><C-W><C-F> :sp\|call <SID>edit_file(1)<CR> 
 " Save
 nnoremap <c-s> :w<CR>
+nnoremap <m-s> :w<CR>
 
 " syntax dev tool (vim dev) 
 nma <silent><leader>1ss :call <SID>synstack()<CR>

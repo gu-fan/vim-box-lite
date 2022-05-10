@@ -591,9 +591,9 @@ Plug 'tpope/vim-surround'
 " Plug 'gu-fan/simpletodo.vim'
 Plug 'rykka/riv.vim'
 
-let proj2 = {'path': '~/nuts/riv/'}
+let proj2 = {'path': '~/wikis/riv/'}
 let proj3 = {'path': '~/Dropbox/wiki/'}
-let proj1 = {'path': '~/nuts/wiki_new/'}
+let proj1 = {'path': '~/wikis/wiki_new/'}
 let proj4 = {'path': '~/test/sphinx/'}
 
 let g:riv_projects = [proj1, proj2, proj3, proj4]
