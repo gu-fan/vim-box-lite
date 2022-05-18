@@ -106,6 +106,8 @@ if !exists('s:ui_loaded')
 
 endif
 
-if g:os.is_windows
-    set lines=999 columns=999
+if g:os.is_windows || g:os.is_linux
+    set lines=999
+    sleep 100m
+    set columns=999
 endif

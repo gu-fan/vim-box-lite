@@ -628,6 +628,14 @@ let g:startify_session_autoload    = 1
 let g:startify_session_persistence = 1
 noremap <c-e>ss :Startify<CR>
 let g:startify_session_before_save = [ 'silent! tabdo NERDTreeClose' ]
+let g:startify_lists = [
+      \ { 'type': 'files',     'header': ['   MRU']            },
+      \ { 'type': 'dir',       'header': ['   MRU '. getcwd()] },
+      \ { 'type': 'sessions',  'header': ['   Sessions']       },
+      \ { 'type': 'bookmarks', 'header': ['   Bookmarks']      },
+      \ { 'type': 'commands',  'header': ['   Commands']       },
+      \ ]
+
 
 " filemanager
 "
