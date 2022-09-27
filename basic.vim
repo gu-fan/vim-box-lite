@@ -1037,7 +1037,6 @@ augroup help
     au FileType bash set kp=man
 augroup END
 
-
 nor   <F1>   K
 nor   <M-1>   K
 " nno   <s-F2> :%<C-R>=<SID>substitute(@/,"\x00")<CR><Left><Left><Left>
