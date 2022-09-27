@@ -182,7 +182,7 @@ silent! call MakeDirIfNoExists(&backupdir)
 silent! call MakeDirIfNoExists(&directory)
 " }}}
 "
-if g:os.is_windows
+if g:os.is_windows || g:os.is_linux
     " ms win alike
     "
     source $VIMRUNTIME/mswin.vim
@@ -192,6 +192,8 @@ if g:os.is_windows
     ino <C-Z>       <C-O>u<C-O>zv
     vno <C-Z>       <Nop>
 
+    nor <C-S-Z>     <C-R>zv
+
     nor <C-Y>       <C-R>zv
     ino <C-Y>       <C-O><C-R><C-O>zv
     vno <C-Y>       <Nop>
@@ -207,34 +209,8 @@ if g:os.is_windows
 
 
     set selectmode = 
+    noremap Y y$
 
-endif
-
-if g:os.is_linux
-    source $VIMRUNTIME/mswin.vim
-    " Undo/Redo, add 'zv' to view redo/undo line
-    nor <C-Z>       uzv
-    ino <C-Z>       <C-O>u<C-O>zv
-    vno <C-Z>       <Nop>
-
-    nor <C-Y>       <C-R>zv
-    ino <C-Y>       <C-O><C-R><C-O>zv
-    vno <C-Y>       <Nop>
-
-    nor <C-S-Z>       <C-R>zv
-    ino <C-S-Z>       <C-O><C-R><C-O>zv
-    vno <C-S-Z>       <Nop>
-    " CTRL-A is Select all: 
-    " change select mode to visual mode,
-    " except insert mode
-    noremap <C-A> ggVG
-    inoremap <C-A> <C-O>gg<C-O>gH<C-O>G
-    cnoremap <C-A> <C-C>ggVG
-    onoremap <C-A> <C-C>ggVG
-    snoremap <C-A> <C-C>ggVG
-    xnoremap <C-A> <C-C>ggVG
-
-    set selectmode = 
 endif
 
 
@@ -884,7 +860,7 @@ nno   Q          <Nop>
 
 " similar with D
 " nno   yy         "*yy
-nno   Y          "*y$
+" nno   Y          "*y$
 " nno   p          "*p
 nno   cc        <nop>
 " nno   dd         "*dd
@@ -1063,14 +1039,20 @@ augroup END
 
 
 nor   <F1>   K
+nor   <M-1>   K
 " nno   <s-F2> :%<C-R>=<SID>substitute(@/,"\x00")<CR><Left><Left><Left>
 " vno   <s-F2> :<C-R>=<SID>substitute(@/,"\x00")<CR><Left><Left><Left>
 " nno   <F2>   :%<C-R>=<SID>substitute(expand('<cword>'),"b")<CR><Left><Left><Left>
 " vno   <F2>   :<C-R>=<SID>substitute(expand('<cword>'),"b")<CR><Left><Left><Left>
 nno   <F2>     :%<C-R>=search.generate(@/,"\x00")<CR><Left><Left><Left>
 vno   <F2>     :<C-R>=<SID>w(@/,"\x00")<CR><Left><Left><Left>
+nno   <M-2>     :%<C-R>=search.generate(@/,"\x00")<CR><Left><Left><Left>
+vno   <M-2>     :<C-R>=<SID>w(@/,"\x00")<CR><Left><Left><Left>
+
 nno   <S-F2>   :%<C-R>=<SID>w(expand('<cword>'),"b")<CR><Left><Left><Left>
 vno   <S-F2>   :<C-R>=<SID>w(expand('<cword>'),"b")<CR><Left><Left><Left>
+nno   <S-M-2>   :%<C-R>=<SID>w(expand('<cword>'),"b")<CR><Left><Left><Left>
+vno   <S-M-2>   :<C-R>=<SID>w(expand('<cword>'),"b")<CR><Left><Left><Left>
 
 " TODO: use c_Ctrl-\_e to finish this.
 " XXX
@@ -1082,13 +1064,18 @@ imap  <F3>   <C-O>:set nopaste<CR>
 
 "{{{3 F3 Ack-grep http://better-than-grep.com
 " exists ag or grep
-nor   <S-F3>     :Ag <C-R><C-F> %<CR>
-vno   <S-F3>     y:Ag <C-R>" %<CR>
+nor   <S-F3>     :Ag <C-R><C-F><CR>
+vno   <S-F3>     y:Ag <C-R>"<CR>
 nor   <F3>   :Ag 
 vno   <F3>   y:Ag <C-R>"<CR>
+nor   <S-M-3>     :Ag <C-R><C-F> %<CR>
+vno   <S-M-3>     y:Ag <C-R>" %<CR>
+nor   <M-3>   :Ag 
+vno   <M-3>   y:Ag <C-R>"<CR>
 
 "{{{3 F4 Folder
 nno <silent> <F4> :call <SID>toggle_nerdfind()<CR>
+nno <silent> <M-4> :call <SID>toggle_nerdfind()<CR>
 " nno <silent> <F4> :Fern . -drawer -toggle -reveal=% -stay<CR>
 nno <silent> <C-T> :call <SID>toggle_nerdfind()<CR>
 " nno <silent> <F5> :call <SID>exe("n")<CR>
@@ -1099,7 +1086,7 @@ nno <silent> <leader>rn :call <SID>exe("n")<CR>
 com! -nargs=0 Dir call <SID>file_man('')
 com! -nargs=0 Term call <SID>terminal()
 
-nor   <F7>   :GundoToggle<CR>
+" nor   <F7>   :GundoToggle<CR>
 nor   <F8>   :Dir<CR>
 " nor   <F6>   :Sexe yarn test<CR>
 nor   <leader>rt :Sexe yarn test<CR>

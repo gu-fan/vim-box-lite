@@ -615,11 +615,16 @@ Plug 'rykka/InstantRst'
 " Plug 'vim-jp/vital.vim'
 
 Plug 'mattn/webapi-vim'
-Plug 'rykka/trans.vim'
+" Plug 'rykka/trans.vim'
 
-" This api is much faster.
-let g:trans_default_api = 'youdao'
-let g:trans_map_trans = '<localleader>tt'
+" " This api is much faster.
+" " let g:trans_default_api = 'google'
+" let g:trans_map_trans = '<localleader>tt'
+"
+noremap <leader>tt :call <SID>trans()<CR>
+func! s:trans()
+    exec '!trans -b -t zh+en ' . expand('<cword>')
+endfunc
 
 Plug 'mhinz/vim-startify'
 let g:startify_bookmarks = [{'riv':'/Users/gu_fan/nuts/wiki_new/index.rst'}]
@@ -629,9 +634,9 @@ let g:startify_session_persistence = 1
 noremap <c-e>ss :Startify<CR>
 let g:startify_session_before_save = [ 'silent! tabdo NERDTreeClose' ]
 let g:startify_lists = [
+      \ { 'type': 'sessions',  'header': ['   Sessions']       },
       \ { 'type': 'files',     'header': ['   MRU']            },
       \ { 'type': 'dir',       'header': ['   MRU '. getcwd()] },
-      \ { 'type': 'sessions',  'header': ['   Sessions']       },
       \ { 'type': 'bookmarks', 'header': ['   Bookmarks']      },
       \ { 'type': 'commands',  'header': ['   Commands']       },
       \ ]
@@ -682,7 +687,8 @@ let g:ctrlp_custom_ignore =  {
     \ }
 let g:ctrlp_use_cache = 1
 let g:ctrlp_root_markers=['.git', 'package.json', 'package.vim','.root', 'default_env.tres']
-let g:ctrlp_switch_buffer = 'et'
+let g:ctrlp_switch_buffer = 'v'
+let g:ctrlp_prompt_mappings = { 'PrtClearCache()': ['<F5>', '<m-5>'] }
 
 " let g:ctrlp_user_command = 'ag %s -l --nocolor --hidden -g ""'
 set wildignore+=*/.git/*,*/.hg/*,*/.svn/*,*/node_modules/*,.DS_Store,default-0.json
