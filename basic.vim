@@ -806,7 +806,7 @@ auto! BufWritePost ~/.dot.vim/**/*.vim source %
 let g:mapleader=' '
 let g:maplocalleader=' '
 
-nmap <leader>vv :e ~/vim/vim-box-lite/index.vim<CR>
+" nmap <leader>vv :e ~/.vim/vim-box-lite/index.vim<CR>
 nmap <leader>bb :e ~/.zshrc<CR>
 
 " with input method "{{{ 1

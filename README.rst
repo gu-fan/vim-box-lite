@@ -8,7 +8,7 @@ Install
 
 1. download and put it somewhere::
 
-    git clone https://github.com/gu-fan/vim-box-lite.git ~/vim/vim-box-lite
+    git clone https://github.com/gu-fan/vim-box-lite.git ~/.vim/vim-box-lite
 
 2. install vim-plug, see details in
    https://github.com/junegunn/vim-plug::
@@ -18,8 +18,11 @@ Install
 
 3. edit vimrc `~/.vimrc`::
 
-    cd ~/vim/vim-box-lite
-    so ~/vim/vim-box-lite/index.vim
+    cd ~/.vim/vim-box-lite
+    so ~/.vim/vim-box-lite/index.vim
+    " mapping for edit vimrc
+    nmap <leader>vv :e ~/.vim/vim-box-lite/index.vim<CR>
+
 
 4. Plug Install::
 

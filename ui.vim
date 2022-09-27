@@ -40,7 +40,7 @@ if !exists('s:ui_loaded')
         set guifont=Lucida\ console:h12
     elseif g:os.is_mac
         " echoe 'MAC FONT'
-        set guifont=Droid\ Sans\ Mono\ for\ Powerline:h16
+        set guifont=Droid\ Sans\ Mono\ for\ Powerline:h18
         " set guifontwide=兰亭黑-简\ 纤黑:h16
         " http://wenq.org/wqy2/index.cgi?Download#MicroHei_Beta
         " set guifontwide=文泉驿等宽微米黑:h16
