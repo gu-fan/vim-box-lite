@@ -1,0 +1,39 @@
+# vim: set list : 
+snippet     for
+abbr        for ... in ...: ...
+options     head
+	for ${1:#:value} in ${2:#:list}:
+		${0:pass}
+
+        
+snippet     print
+options     word
+	print(${0:#:TARGET})
+
+snippet     debug
+options     word
+	printerr('DDDDDD', ${0:#:TARGET})
+
+snippet     v2
+options     word
+	Vector2(${0})
+snippet     v3
+options     word
+	Vector3(${0})
+
+snippet     cust
+options     word
+    custom_minimum_size = Vector2(${0:10,10})
+
+snippet     uwait
+options     head
+    await Util.wait(${0:0.1})
+
+
+snippet     create_node
+    UI.create_node({
+    		type='${1:ColorRect}',
+    		name='${2:Rect}',
+    		custom_minmum_size=${3:Vector2(40, 40)},
+    	})
+

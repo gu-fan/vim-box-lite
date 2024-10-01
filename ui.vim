@@ -31,7 +31,11 @@ if !exists('s:ui_loaded')
     " set background=light
     set background=dark
     " colorscheme solarized8_low
-    colorscheme sialoquent
+    " colorscheme sialoquent
+    " colorscheme tokyonight
+    " colorscheme catppuccin_mocha
+    " colorscheme spaceduck
+    colorscheme deep-space
 
 
     if g:os.is_windows
@@ -46,9 +50,9 @@ if !exists('s:ui_loaded')
         " set guifontwide=文泉驿等宽微米黑:h16
     elseif g:os.is_unix
         " default in mint 20
-        set guifont=DejaVu\ Sans\ Mono\ 14
+        set guifont=DejaVu\ Sans\ Mono\ 16
         " sudo apt install ttf-wqy-microhei ttf-wqy-zenhei
-        set guifontwide=WenQuanYi\ Micro\ Hei\ Mono\ 14
+        " set guifontwide=WenQuanYi\ Micro\ Hei\ Mono\:h16
     endif
     set lazyredraw                  " only redraws if it is needed
 
@@ -104,12 +108,16 @@ if !exists('s:ui_loaded')
     set wildignore+=*.pyc                            " Python byte code
     set wildignore+=*.stats                          " Pylint stats
 
+    if g:os.is_windows
+        wins 999 999
+    elseif g:os.is_linux && !exists("g:_no_max")
+        wins 80 65
+        " winp 2500 0
+        " augroup maximizewindow 
+        "     autocmd! 
+        "     autocmd VimEnter * call system('wmctrl -i -b add,maximized_vert,maximized_horz -r '.v:windowid)
+        " augroup END
+    endif
+
 endif
 
-if g:os.is_windows || g:os.is_linux
-    " set lines=999
-    " sleep 100m
-    " set columns=999
-	" au GUIEnter * simalt ~x
-    wins 999 999
-endif

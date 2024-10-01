@@ -14,11 +14,9 @@ let g:terminal_ansi_colors =
 set ff=unix
 set encoding=utf-8
 set termencoding=utf-8
-set fileencoding=utf-8
-set fileencodings=ucs-bom,utf-8
+set fileencodings=ucs-bom,utf-8,utf-16,gbk,big5,gb18030,latin1
 scriptencoding utf-8
 language messages en_US.utf-8
-
 
 set sua+=.js,.css,.html,.vim,.vue,.styl
 
@@ -53,11 +51,11 @@ com! Pwd let @+ = expand('%:p:h')|echo 'PATH:'.@+
 com! Trail call Trim()
 com! Trim call Trim()
 
-cabbrev ss so %
-cabbrev E e
-cabbrev dir Dir
-cabbrev trim Trim
-cabbrev copy Copy
+" cabbrev ss so %
+" cabbrev E e
+" cabbrev dir Dir
+" cabbrev trim Trim
+" cabbrev copy Copy
 
 
 function! Trim()
@@ -80,14 +78,26 @@ set foldclose=
 nno <silent> zf :set opfunc=MyFoldMarker<CR>g@
 vno <silent> zf :<C-U>call MyFoldMarker(visualmode(), 1)<CR>zv
 nno <silent> zz @=(&foldlevel?'zM':'zR')<CR>
-nno <silent> <leader>zz @=(&foldlevel?'zM':'zR')<CR>
-nno <silent> <leader><leader> @=(foldclosed('.')>0?'zv':'zc')<CR>
-vno <silent> <leader><leader> <ESC>@=(foldclosed('.')>0?'zv':'zc')<CR>gv
-nor <2-rightmouse> @=(foldclosed('.')>0?'zv':'zc')<CR>
-vno <2-rightmouse> <ESC>@=(foldclosed('.')>0?'zv':'zc')<CR>gv
+nno <silent> zc @=(<SID>toggle_fold())<CR>
+" nno <silent> <leader>zz @=(&foldlevel?'zM':'zr')<CR>
+nno <silent> <leader><leader> @=(foldclosed('.')>0?'zA':'zc')<CR>
+vno <silent> <leader><leader> <ESC>@=(foldclosed('.')>0?'zA':'zc')<CR>gv
+nor <2-rightmouse> @=(foldclosed('.')>0?'zA':'zc')<CR>
+vno <2-rightmouse> <ESC>@=(foldclosed('.')>0?'zA':'zc')<CR>gv
 nor <silent> <leader>ff :setl fdm=<C-R>=&fdm=~'mar'?'indent'
             \:&fdm=~'ind'?'syntax'
             \:&fdm=~'syn'?'expr':'marker'<CR><BAR>ec &fdm<CR>
+
+function s:toggle_fold()
+    let fl = &foldlevel
+    let fcl = foldclosed('.')
+    if fl > 0 && fcl < 0
+        exec 'norm! zM'
+    else
+        exec 'norm! zr'
+    endif
+endfunction
+
 function! MyFoldText() "{{{
     let markers = split(&foldmarker, ",")
     let cmtmakrer = substitute(&commentstring, "%s", markers[0], "\x00")
@@ -206,10 +216,9 @@ if g:os.is_windows || g:os.is_linux
     onoremap <C-A> <C-C>ggVG
     snoremap <C-A> <C-C>ggVG
     xnoremap <C-A> <C-C>ggVG
-
-
     set selectmode = 
     noremap Y y$
+    " noremap <C-Q> :q!<CR>
 
 endif
 
@@ -634,7 +643,7 @@ aug au_Filetypes "{{{
     au FileType jass     setl wrap fdm=syntax
     au FileType jass     nor <buffer> gD :call <SID>jass_goDef()<CR>
     au FileType javascript call <SID>js_fold()
-    au FileType javascript,typescript setl sw=2
+    au FileType javascript,typescript setl sw=4
     au FileType python map <buffer> <F1> :Pydoc <C-R><C-W><CR>
     au FileType python map <buffer> K k
     au FileType python setl wrap foldtext=MyFoldText()
@@ -672,9 +681,11 @@ endfunction
 
 
 aug au_Filetypes_gd "{{{
+    au!
     au FileType gdscript setl fdm=expr
     au FileType gdscript setl fdls=0
     au Filetype gdscript setl shiftwidth=4 expandtab tabstop=4 softtabstop=4
+    au BufRead,BufNewFile *.gd setl shiftwidth=4 expandtab tabstop=4 softtabstop=4
 	" au FileType gdscript setl foldexpr=getline(v:lnum)=~'^#\\s*--.*--$'
 aug END "}}}
 
@@ -806,8 +817,6 @@ auto! BufWritePost ~/.dot.vim/**/*.vim source %
 let g:mapleader=' '
 let g:maplocalleader=' '
 
-" nmap <leader>vv :e ~/.vim/vim-box-lite/index.vim<CR>
-nmap <leader>bb :e ~/.zshrc<CR>
 
 " with input method "{{{ 1
 se imd
@@ -827,6 +836,9 @@ nor <Leader>li :setl list! list?<CR>
 set nonu nornu
 nor <leader>nn :setl <c-r>=&rnu?'nornu':&nu?'nonu':'rnu'<CR><CR>
 nno <silent><leader>dd :exec &diff ? 'diffoff' : 'diffthis'<CR>
+nno <silent><leader>do :diffget<CR>
+nno <silent><leader>dp :diffput<CR>
+
 
 " Clear screen
 nno   <silent>   <c-l>   :let @/=''\|redraw!<CR>
@@ -846,12 +858,18 @@ nno   k   gk
 vno   j  gj
 vno   k  gk
 
+nno   gK  K
+nno   gJ  J
+
 " nno   <leader>   <Nop>
 " vno   <leader>   <Nop>
 nno   s          <Nop>
 nno   S          <Nop>
 nno   c          <Nop>
 nno   Q          <Nop>
+nno   q          <Nop>
+nno   gq         q
+nno   <nowait> q:      :
 
 
 " use x or d to delete selected
@@ -937,9 +955,29 @@ nno <silent><C-W><C-V> :on\|vsp\|call <SID>edit_file(0)<CR>
 nno <silent><C-W><C-S> :sp\|call <SID>edit_file(0)<CR>
 nno <silent><C-W><C-T> :tab sp\|call <SID>edit_file(0)<CR>
 nno <silent><C-W><C-F> :sp\|call <SID>edit_file(1)<CR> 
+
+
+
 " Save
 nnoremap <c-s> :w<CR>
 nnoremap <m-s> :w<CR>
+
+nno <silent><C-W>q :call <SID>close_win_keep_last()<CR>
+nno <silent><C-W><C-Q> :call <SID>close_win_keep_last()<CR>
+tno <silent><C-W><C-Q> <C-C><C-W>N:call <SID>close_win_keep_last()<CR>
+tno <silent><C-W>q <C-C><C-W>N:call <SID>close_win_keep_last()<CR>
+
+function! s:close_win_keep_last()
+    if winnr('$') == 1
+        echo "is last window"
+    else
+        if getbufvar(bufnr(), '&buftype') == 'terminal'
+            exe "bw!"
+        else
+            exe "quit"
+        endif
+    endif
+endfunction
 
 " syntax dev tool (vim dev) 
 nma <silent><leader>1ss :call <SID>synstack()<CR>
@@ -1074,6 +1112,8 @@ vno   <M-3>   y:Ag <C-R>"<CR>
 
 "{{{3 F4 Folder
 nno <silent> <F4> :call <SID>toggle_nerdfind()<CR>
+nno <leader>ee  :call <SID>toggle_nerdfind()<CR>
+nno <c-e>ee  :call <SID>toggle_nerdfind()<CR>
 nno <silent> <M-4> :call <SID>toggle_nerdfind()<CR>
 " nno <silent> <F4> :Fern . -drawer -toggle -reveal=% -stay<CR>
 nno <silent> <C-T> :call <SID>toggle_nerdfind()<CR>
@@ -1082,7 +1122,7 @@ nno <silent> <C-T> :call <SID>toggle_nerdfind()<CR>
 " nno <silent> <D-r> :call <SID>exe("n")<CR>
 nno <silent> <leader>rn :call <SID>exe("n")<CR>
 
-com! -nargs=0 Dir call <SID>file_man('')
+com! -nargs=0 Dir call <SID>file_man()
 com! -nargs=0 Term call <SID>terminal()
 
 " nor   <F7>   :GundoToggle<CR>
@@ -1104,12 +1144,12 @@ endfunction "}}}
 function! s:exe(mode) "{{{
     update
     let bang="!"
-    if g:_v.is_mac
+    if g:os.is_mac
         let browser = 'open -a "Google Chrome" -g'
         let runner="open "
         let err_log=" "
         let term = "iTerm "
-    elseif g:_v.is_unix
+    elseif g:os.is_unix
         let browser = "firefox "
         let runner="xdg-open "
         let err_log=" 2>&1 | tee /tmp/.vim_exe.tmp"
@@ -1194,13 +1234,13 @@ function! s:gcp() "{{{
     endif
     exec "!gcc -Wall " . lib . " -o %:t:r %"
 endfunction "}}}
-function! s:file_man(mode) "{{{
-    if g:_v.is_windows
+function! s:file_man() "{{{
+    if g:os.is_windows
         sil exec '!start explorer "%:p:h"'
-    elseif g:_v.is_mac
+    elseif g:os.is_mac
         sil exec "!open '%:p:h'"
     else
-        sil exec "!".a:mode."nautilus '%:p:h' & "
+        sil exec "!nemo %:p"
     endif
 endfunction "}}}
 function! s:terminal() "{{{
@@ -1265,9 +1305,8 @@ function! s:init_pair()
         unlet e
     endfor
 endfunction
-
-
 call <SID>init_pair()
+
 
 ino {<CR>  {<CR>}<Esc>O<tab>
 ino {<c-e> {<c-o>mz<end><cr>}<c-o>`z<cr><tab>

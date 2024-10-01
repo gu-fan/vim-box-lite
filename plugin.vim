@@ -1,7 +1,11 @@
+" vim9script noclear
+
 call plug#begin('~/.vim/plugged')
+
 " HTML
 " vim:sw=2
-Plug 'chemzqm/wxapp.vim'
+Plug 'wellle/targets.vim'
+" Plug 'chemzqm/wxapp.vim'
 " Plug 'wavded/vim-stylus'
 Plug 'groenewege/vim-less'
 Plug 'kchmck/vim-coffee-script'
@@ -29,6 +33,13 @@ Plug 'dart-lang/dart-vim-plugin'
 Plug 'rust-lang/rust.vim'
 Plug 'habamax/vim-godot'
 
+Plug 'godlygeek/tabular'
+nmap <Leader>== :Tabularize /=<CR>
+vmap <Leader>== :Tabularize /=<CR>
+nmap <Leader>=, :Tabularize /,<CR>
+vmap <Leader>=, :Tabularize /,<CR>
+nmap <Leader>=: :Tabularize /:\zs<CR>
+vmap <Leader>=: :Tabularize /:\zs<CR>
 " setlocal indentkeys+=0.
 " make build work better
 " autocmd QuickFixCmdPost [^l]* nested cwindow
@@ -272,17 +283,15 @@ au FileType scss set iskeyword+=-
 Plug 'maksimr/vim-jsbeautify' , { 'do': 'git submodule update --init --recursive' }
 
 
+" Plug 'AndrewRadev/inline_edit.vim'
+"     " normal mode:
+"     nnoremap <leader>ee :InlineEdit<cr>
 
+"     " visual mode:
+"     xnoremap <leader>ee :InlineEdit<cr>
 
-Plug 'AndrewRadev/inline_edit.vim'
-    " normal mode:
-    nnoremap <leader>ee :InlineEdit<cr>
-
-    " visual mode:
-    xnoremap <leader>ee :InlineEdit<cr>
-
-    " insert mode:
-    inoremap <c-e>e <esc>:InlineEdit<cr>a
+"     " insert mode:
+"     inoremap <c-e>e <esc>:InlineEdit<cr>a
 
 " complete
 "
@@ -315,6 +324,12 @@ set completeopt+=noselect
 set shortmess+=c   " Shut off completion messages
 let g:mucomplete#enable_auto_at_startup = 1
 imap <expr> <down> mucomplete#extend_fwd("\<down>")
+
+let g:mucomplete#chains = {}
+let g:mucomplete#chains.default = ['path', 'nsnp', 'keyn']
+" inoremap <silent> <expr> <plug><MyCR>
+"     \ mucomplete#neosnippet#expand_snippet("\<cr>")
+" imap <cr> <plug><MyCR>
 
 " Plug 'ajh17/VimCompletesMe'
 " Plug 'Shougo/ddc.vim'
@@ -362,6 +377,7 @@ imap <expr> <down> mucomplete#extend_fwd("\<down>")
 
 Plug 'Shougo/neosnippet'
 Plug 'Shougo/neosnippet-snippets'
+" Plug 'honza/vim-snippets'
 
 "" Neocomplcache "{{{2
 "nno <leader>nt :NeoComplCacheToggle<CR>
@@ -536,7 +552,7 @@ Plug 'Shougo/neosnippet-snippets'
 
 
 " neocompl cache snippets_complete
-" nmap <c-k> a<c-k><esc>
+nmap <c-k> a<c-k><esc>
 imap <C-k>     <Plug>(neosnippet_expand_or_jump)
 smap <C-k>     <Plug>(neosnippet_expand_or_jump)
 xmap <C-k>     <Plug>(neosnippet_expand_target)
@@ -556,15 +572,16 @@ xmap <C-k>     <Plug>(neosnippet_expand_target)
 if has('conceal')
     set conceallevel=0 concealcursor=i
 endif
-let g:neosnippet#snippets_directory = "~/Dropbox/vim/my_snips/snippets_complete/"
+let g:neosnippet#snippets_directory = "~/.vim-box/snips/snippets_complete/"
+let g:neosnippet#enable_snipmate_compatibility = 1
 
 map <leader>pe :sp\|NeoSnippetEdit<cr>
 map <leader>pr :sp\|NeoSnippetSource<cr>
-map <leader>p_ :sp\|e ~/Dropbox/vim/my_snips/snippets_complete/_.snip <cr>
+map <leader>p_ :sp\|e ~/.vim-box/snips/snippets_complete/_.snip <cr>
 
 command! EditSnip sp|NeoSnippetEdit
 command! EditSrc sp|NeoSnippetSource
-command! EditMy sp|e ~/Dropbox/vim/my_snips/snippets_complete/_.snip
+command! EditMy sp|e ~/.vim-box/snips/snippets_complete/_.snip
 
 
 " Deprecated, not good as neosnippet
@@ -591,12 +608,10 @@ Plug 'tpope/vim-surround'
 " Plug 'gu-fan/simpletodo.vim'
 Plug 'rykka/riv.vim'
 
-let proj2 = {'path': '~/wikis/riv/'}
-let proj3 = {'path': '~/Dropbox/wiki/'}
-let proj1 = {'path': '~/wikis/wiki_new/'}
-let proj4 = {'path': '~/test/sphinx/'}
+let proj1 = {'path': '~/Documents/wikis/wiki_new/'}
+let proj2 = {'path': '~/Documents/wikis/riv/'}
 
-let g:riv_projects = [proj1, proj2, proj3, proj4]
+let g:riv_projects = [proj1, proj2]
 " XXX: This should be set as a project option.
 let g:riv_todo_datestamp = 0
 let g:riv_file_link_style = 2
@@ -623,23 +638,43 @@ Plug 'mattn/webapi-vim'
 "
 noremap <leader>tt :call <SID>trans()<CR>
 func! s:trans()
-    exec '!trans -b -t zh+en ' . expand('<cword>')
+    " exec '!trans -b -t zh+en ' . expand('<cword>')
+    " exec '!dict -d wn '. expand('<cword>')
+    exec '!sdcv -n '. expand('<cword>')
 endfunc
 
 Plug 'mhinz/vim-startify'
-let g:startify_bookmarks = [{'riv':'/Users/gu_fan/nuts/wiki_new/index.rst'}]
-let g:startify_bookmarks = [{'min':'~/godot/Mini_Mota/scripts/battle/Player.gd'}]
 let g:startify_session_autoload    = 1
 let g:startify_session_persistence = 1
+let g:startify_relative_path       = 1
+let g:startify_change_to_dir       = 1
 noremap <c-e>ss :Startify<CR>
-let g:startify_session_before_save = [ 'silent! tabdo NERDTreeClose' ]
+noremap <leader>ss :Startify<CR>
+" let g:startify_session_before_save = [ 'silent! tabdo NERDTreeClose' ]
 let g:startify_lists = [
-      \ { 'type': 'sessions',  'header': ['   Sessions']       },
       \ { 'type': 'files',     'header': ['   MRU']            },
       \ { 'type': 'dir',       'header': ['   MRU '. getcwd()] },
+      \ { 'type': 'sessions',  'header': ['   Sessions']       },
       \ { 'type': 'bookmarks', 'header': ['   Bookmarks']      },
       \ { 'type': 'commands',  'header': ['   Commands']       },
       \ ]
+
+let g:startify_skiplist = [
+        \ 'COMMIT_EDITMSG',
+        \ 'bundle/.*/doc',
+        \ '/data/repo/neovim/runtime/doc',
+        \ '/Users/mhi/local/vim/share/vim/vim74/doc',
+        \ ]
+
+hi StartifyBracket ctermfg=240
+hi StartifyFile    ctermfg=147
+hi StartifyFooter  ctermfg=240
+hi StartifyHeader  ctermfg=114
+hi StartifyNumber  ctermfg=215
+hi StartifyPath    ctermfg=245
+hi StartifySlash   ctermfg=240
+hi StartifySpecial ctermfg=240
+
 
 
 " filemanager
@@ -657,12 +692,15 @@ noremap <leader>h :Ag<CR>
 
 Plug 'scrooloose/nerdtree'
 
+
 " Plug 'lambdalisue/fern.vim'
 
-let g:NERDTreeQuitOnOpen=1
+let g:NERDTreeQuitOnOpen=0
 let g:NERDTreeShowHidden=1
+let g:NERDTreeMinimalUI=1
 let g:NERDTreeShowBookmarks = 0
-let g:NERDTreeWinPos = 'right'
+let g:NERDTreeWinPos = 'left'
+let g:NERDTreeWinSize = 20
 let g:NERDTreeHijackNetrw=0         
 " netrw 还是有很多问题，双击会返回上级
 " nerd too
@@ -673,36 +711,42 @@ aug au_NERD
     au!
     au filetype netrw nmap <buffer> <2-leftmouse> <CR>
     " NERDTREE AUTO REFRESH
-    au BufWritePost * 
-        \ if type(g:NERDTree.ForCurrentTab()) != 0 |
-        \ call g:NERDTree.ForCurrentTab().getRoot().refresh() |
-        \ endif
+    " au BufWritePost * 
+    "     \ if type(g:NERDTree.ForCurrentTab()) != 0 |
+    "     \ call g:NERDTree.ForCurrentTab().getRoot().refresh() |
+    "     \ endif
 aug END
+
+Plug 'tpope/vim-vinegar'
+" Plug 'justinmk/vim-dirvish'
+" Plug 'lambdalisue/fern.vim'
 
 Plug 'kien/ctrlp.vim'
 " nmap <C-J>  :CtrlPLine<CR>
 let g:ctrlp_custom_ignore =  {
     \ 'dir':  '\v[\/](\.(git|hg|svn)|node_modules|dist|.import)$',
-    \ 'file': '\v\.(exe|so|dll|meta|png|jpg|psd|asset|ttf|otf|tres|tscn|import)$',
+    \ 'file': '\v\.(exe|so|dll|meta|png|jpg|psd|asset|ttf|otf|import|aesprite)$',
     \ }
 let g:ctrlp_use_cache = 1
-let g:ctrlp_root_markers=['.git', 'package.json', 'package.vim','.root', 'default_env.tres']
+let g:ctrlp_root_markers=['.git', 'package.json', 'package.vim','.root', 'project.godot']
 let g:ctrlp_switch_buffer = 'v'
 let g:ctrlp_prompt_mappings = { 'PrtClearCache()': ['<F5>', '<m-5>'] }
-
+let g:ctrlp_user_command = 'ag %s -l --nocolor --ignore ".git/" --hidden -g ""'
 " let g:ctrlp_user_command = 'ag %s -l --nocolor --hidden -g ""'
 set wildignore+=*/.git/*,*/.hg/*,*/.svn/*,*/node_modules/*,.DS_Store,default-0.json
 
 " let g:ctrlp_working_path_mode = 'wr'
-fun! V(...)
-    CtrlPMRU
-    if a:0
-        call feedkeys(a:1)
-    endif
-endfun
-com! -nargs=* V call V(<q-args>)
-map <leader>pv  :CtrlPMRU<CR>
-map <leader>pl  :CtrlPLine<CR>
+" fun! V(...)
+"     CtrlPMRU
+"     if a:0
+"         call feedkeys(a:1)
+"     endif
+" endfun
+" com! -nargs=* V call V(<q-args>)
+" let g:ctrlp_cmd = 'CtrlPMixed'
+" nmap <c-p>  :CtrlPMixed<CR>
+nmap <leader>el  :CtrlPLine<CR>
+
 " map <leader>pp  :CtrlP<CR>
 
 " Plug 'Shougo/denite.nvim'
@@ -959,8 +1003,10 @@ map <leader>pl  :CtrlPLine<CR>
 Plug 'tpope/vim-fugitive'
 
 
-nnore <Leader>gp :Srun git push<CR>
-nnore <Leader>gP :Srun git pull<CR>
+nnore <Leader>gp :Git push<CR>
+nnore <Leader>gP :Git pull<CR>
+" nnore <Leader>gp :Srun git push<CR>
+" nnore <Leader>gP :Srun git pull<CR>
 nnore <leader>gc :Git commit -a -v<CR>
 nnore <leader>gs :Git<CR>
 nnore <leader>gb :Git blame<CR>
@@ -988,17 +1034,16 @@ Plug 'gu-fan/lastbuf.vim'
 " save/load last workspace
 Plug 'tpope/vim-obsession'
 
-set ssop=blank,curdir,help,resize,tabpages,winpos,winsize
+set ssop=blank,curdir,help,resize,tabpages,winsize,winpos,terminal
 
 let _p = expand('~/.vim/session')
 if !isdirectory(_p)
     call mkdir(_p, 'p')
 endif
 
-
 fun! s:save_session(ses)
     if a:ses != ''
-        exe 'Obsession ~/.vim/session/' . a:ses
+        exe 'Obsession ~/.vim/session/' . a:ses . '.vim'
     else
         Obsession ~/.vim/session/default.vim
     endif
@@ -1006,21 +1051,32 @@ endfun
 
 fun! s:load_session(ses)
     if a:ses != ''
-        exe 'so ~/.vim/session/' . a:ses
+        exe 'so ~/.vim/session/' . a:ses . '.vim'
     else
         so ~/.vim/session/default.vim
     endif
 endfun
 
+fun! s:del_session(ses)
+    if a:ses != ''
+        exe '!rm ~/.vim/session/' . a:ses . '.vim'
+    else
+        echom 'can not remove default session'
+    endif
+endfun
+
 fun! s:restart()
+    Obsession ~/.vim/session/restart.vim
     execute 'wa'
-    call system('gvim -c "Load"')
+    call system('gvim -c "SLoad restart"')
     quitall
 endfun
 
 com! -nargs=? -complete=customlist,ListSess Save call s:save_session(<q-args>)
 com! -nargs=? -complete=customlist,ListSess Load call s:load_session(<q-args>)
+com! -nargs=? -complete=customlist,ListSess Delete call s:del_session(<q-args>)
 com! -nargs=0 Restart :call s:restart()
+com! -nargs=0 Quit :quitall!
 
 func! ListSess(A,L,P)
     let _ls  = split(globpath('~/.vim/session/', '*'), "\n")
@@ -1028,9 +1084,9 @@ func! ListSess(A,L,P)
     return _ls
 endfun
 
-cabbrev save Save
-cabbrev load Load
-cabbrev restart Restart
+" cabbrev save Save
+" cabbrev load Load
+" cabbrev restart Restart
 
 " lang
 
@@ -1047,6 +1103,7 @@ map <Leader> <Nop>
 nmap f <Plug>(easymotion-s)
 nmap F <Plug>(easymotion-s)
 nmap t <Plug>(easymotion-t)
+nmap s <Plug>(easymotion-s2)
 " " Gif config
 " map  / <Plug>(easymotion-sn)
 " omap / <Plug>(easymotion-tn)
@@ -1105,35 +1162,118 @@ com! -nargs=0 Al2 :norm gLip=
 "
 " Plug 'Shougo/deol.nvim'
 
-Plug 'gu-fan/simpleterm.vim'
+" Plug 'gu-fan/simpleterm.vim'
 
-nnore <Leader>fk :20Sadd fortune\|cowsay\|lolcat<CR>
+" nnore <Leader>fk :20Sadd fortune\|cowsay\|lolcat<CR>
 
-" set shell=/bin/zsh                      " set other shell if needed
-" set shell=/usr/local/bin/fish             " set other shell if needed
+" " set shell=/bin/zsh                      " set other shell if needed
+" " set shell=/usr/local/bin/fish             " set other shell if needed
 
 
-" not useful as not binded
-" set ssop+=terminal
+" " not useful as not binded
+" " set ssop+=terminal
 
-tnor <leader>pp <c-w>"+
+" tnor <leader>pp <c-w>"+
 
-nnor <leader>pp :call simpleterm.exe()<CR>
+" nnor <leader>pp :call simpleterm.exe()<CR>
 
 " UI
-"
-
 Plug 'gu-fan/colorv.vim'
 
 let g:colorv_preview_ftype = 'css,html,vue,gdscript,javascript,less,styl'
 
 Plug 'gu-fan/galaxy.vim'
+Plug 'itchyny/lightline.vim'
+" Plug 'github/copilot.vim'
+" imap <silent><script><expr> <C-J> copilot#Accept("\<CR>")
+" let g:copilot_no_tab_map = v:true
+" imap <silent><script><expr> <M-J> <Plug>(copilot-next)
+"
+Plug 'junegunn/vim-easy-align'
+" Start interactive EasyAlign in visual mode (e.g. vipga)
+xmap ga <Plug>(EasyAlign)
+" Start interactive EasyAlign for a motion/text object (e.g. gaip)
+nmap ga <Plug>(EasyAlign)
+
+" ColorScheme
 Plug 'tomasr/molokai'
 Plug 'davidklsn/vim-sialoquent'
 Plug 'beikome/cosme.vim'
 Plug 'lifepillar/vim-solarized8'
-Plug 'itchyny/lightline.vim'
+Plug 'morhetz/gruvbox'
+Plug 'sainnhe/sonokai'
+Plug 'ghifarit53/tokyonight-vim'
+Plug 'catppuccin/vim'
+Plug 'pineapplegiant/spaceduck'
+Plug 'tyrannicaltoucan/vim-deep-space'
+Plug 'haishanh/night-owl.vim'
+Plug 'cocopon/iceberg.vim'
+Plug 'navarasu/onedark.nvim'
 
+" -------------------------------------------
+" Plug 'prabirshrestha/vim-lsp'
+" Plug 'mattn/vim-lsp-settings'
+" if executable('pylsp')
+    " " pip install python-lsp-server
+    " au User lsp_setup call lsp#register_server({
+    "     \ 'name': 'godot',
+    "     \ 'cmd': {server_info->['pylsp']},
+    "     \ 'allowlist': ['python'],
+    "     \ })
+" " endif
+
+" function! s:on_lsp_buffer_enabled() abort
+"     setlocal omnifunc=lsp#complete
+"     setlocal signcolumn=yes
+"     if exists('+tagfunc') | setlocal tagfunc=lsp#tagfunc | endif
+"     nmap <buffer> gd <plug>(lsp-definition)
+"     nmap <buffer> gs <plug>(lsp-document-symbol-search)
+"     nmap <buffer> gS <plug>(lsp-workspace-symbol-search)
+"     nmap <buffer> gr <plug>(lsp-references)
+"     nmap <buffer> gi <plug>(lsp-implementation)
+"     nmap <buffer> gt <plug>(lsp-type-definition)
+"     nmap <buffer> <leader>rn <plug>(lsp-rename)
+"     nmap <buffer> [g <plug>(lsp-previous-diagnostic)
+"     nmap <buffer> ]g <plug>(lsp-next-diagnostic)
+"     nmap <buffer> K <plug>(lsp-hover)
+"     nnoremap <buffer> <expr><c-f> lsp#scroll(+4)
+"     nnoremap <buffer> <expr><c-d> lsp#scroll(-4)
+
+"     let g:lsp_format_sync_timeout = 1000
+"     autocmd! BufWritePre *.rs,*.go call execute('LspDocumentFormatSync')
+    
+"     " refer to doc to add more commands
+" endfunction
+
+" augroup lsp_install
+"     au!
+"     " call s:on_lsp_buffer_enabled only for languages that has the server registered.
+"     autocmd User lsp_buffer_enabled call s:on_lsp_buffer_enabled()
+" augroup END
+" Plug 'thaerkh/vim-workspace'
+" let g:workspace_autocreate = 1
+" nnoremap <leader>tt :ToggleWorkspace<CR>
+" let g:workspace_session_directory = $HOME . '/.vim/sessions/'
+"
+" Plug 'yegappan/lsp'
+" let lspOpts = #{autoHighlightDiags: v:true}
+" autocmd User LspSetup call LspOptionsSet(lspOpts)
+
+" let lspServers = [#{
+" 	\	  name: 'clang',
+" 	\	  filetype: ['c', 'cpp'],
+" 	\	  path: '/usr/local/bin/clangd',
+" 	\	  args: ['--background-index']
+" 	\ }]
+" autocmd User LspSetup call LspAddServer(lspServers)
+
+
+" Plug 'junegunn/limelight.vim'
+
+Plug 'liuchengxu/vim-which-key', { 'on': ['WhichKey', 'WhichKey!'] }
+nnoremap <silent> <leader> :WhichKey '<Space>'<CR>
+set timeoutlen=500
+
+" Plug 'maxbrunsfeld/vim-yankstack'
 
 call plug#end()
-
