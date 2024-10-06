@@ -724,7 +724,7 @@ Plug 'tpope/vim-vinegar'
 Plug 'kien/ctrlp.vim'
 " nmap <C-J>  :CtrlPLine<CR>
 let g:ctrlp_custom_ignore =  {
-    \ 'dir':  '\v[\/](\.(git|hg|svn)|node_modules|dist|.import)$',
+    \ 'dir':  '\v[\/](\.(git|hg|svn)|node_modules|dist|backup|.import)$',
     \ 'file': '\v\.(exe|so|dll|meta|png|jpg|psd|asset|ttf|otf|import|aesprite)$',
     \ }
 let g:ctrlp_use_cache = 1
@@ -1028,7 +1028,6 @@ Plug 'sjl/gundo.vim'
 
 " Open Last closed window
 Plug 'gu-fan/lastbuf.vim'
-
 
 " use startify session instead
 " save/load last workspace
