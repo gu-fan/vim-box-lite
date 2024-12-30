@@ -254,7 +254,7 @@ func! RunCurrentGodot(pos=0)
     let path = FindProjectRoot('project.godot')
     let gd_exe = 'godot4'
     if g:os.is_mac
-        gd_exe = '/Applications/Godot.app/Contents/MacOS/Godot'
+        let gd_exe = '/Applications/Godot.app/Contents/MacOS/Godot'
     endif
     if path isnot 0
         if a:pos is 0
