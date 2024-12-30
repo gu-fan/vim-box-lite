@@ -111,7 +111,9 @@ if !exists('s:ui_loaded')
     if g:os.is_windows
         wins 999 999
     elseif g:os.is_linux && !exists("g:_no_max")
-        wins 80 65
+        if !has('nvim')
+            wins 80 65
+        endif
         " winp 2500 0
         " augroup maximizewindow 
         "     autocmd! 

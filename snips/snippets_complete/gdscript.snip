@@ -5,7 +5,6 @@ options     head
 	for ${1:#:value} in ${2:#:list}:
 		${0:pass}
 
-        
 snippet     print
 options     word
 	print(${0:#:TARGET})
@@ -21,19 +20,69 @@ snippet     v3
 options     word
 	Vector3(${0})
 
-snippet     cust
+snippet     v2i
 options     word
-    custom_minimum_size = Vector2(${0:10,10})
+	Vector2i(${0})
+snippet     v3i
+options     word
+	Vector3i(${0})
 
-snippet     uwait
+snippet     .cust
+options     word
+    .custom_minimum_size = Vector2(${0:10,10})
+
+snippet     .horz_center
+options     word
+    .horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+
+
+snippet     .vert_center
+options     word
+    .vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+
+snippet     wait
 options     head
     await Util.wait(${0:0.1})
 
-
-snippet     create_node
+snippet     node
     UI.create_node({
     		type='${1:ColorRect}',
     		name='${2:Rect}',
     		custom_minmum_size=${3:Vector2(40, 40)},
     	})
 
+snippet     tween
+    var twn = ${1:node}.create_tween()
+    	twn.tween_property(${2:node}, 'size:x', 100, 2.0)
+    	twn.tween_interval(0.3)
+    	twn.tween_property(${2:node}, 'modulate:a', 0.0, 0.3)
+
+snippet     inst
+    load('res://${0:xxx}.tscn').instantiate()
+
+
+snippet     gui_mouse
+options     head
+    func _gui_input(evt):
+        		if evt is InputEventMouseButton and evt.button_index == MOUSE_BUTTON_LEFT and evt.pressed:
+        			${0:pass}
+
+snippet     .mouse_ignore
+options     word
+    .mouse_filter = Control.MOUSE_FILTER_IGNORE
+snippet     .focus_none 
+options     word
+    .focus_mode = Control.FOCUS_NONE
+
+snippet     .set_font_size
+options     word
+    .set("theme_override_font_sizes/font_size", 16)
+snippet     .set_font_color
+options     word
+    .set("theme_override_colors/font_color", 'FFFFFF')
+snippet     .set_font
+options     word
+    .set("theme_override_fonts/font", G.FONT_PRETTY)
+snippet    .set_sep
+options     word
+    .set('theme_override_constants/separation', ${0:10})
