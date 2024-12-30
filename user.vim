@@ -121,7 +121,6 @@ nnoremap <leader>gr :term godot4 --path /home/ryk/godot/SLG_P2 --editor<CR>
 " nnoremap <leader>gt :term godot4 --path /home/ryk/godot/SLG_P2 /home/ryk/godot/SLG_P2/temp/MainCover.tscn<CR>
 nnoremap <leader>rt :term godot4 --headless --path /home/ryk/godot/SLG_P2 -s /home/ryk/godot/SLG_P2/temp/min_test.gd<CR>
 nnoremap <leader>rv :sp /home/ryk/godot/SLG_P2/temp/min_test.gd<CR>
-nnoremap <leader>jj :term /Applications/Godot.app/Contents/MacOS/Godot --path /Users/gu_fan/jams/wild_writer<CR>
 
 " ===== Timer Function =====
 let s:timer_id = -1
@@ -235,6 +234,7 @@ augroup filetype_specific
 augroup END
 
 " nnoremap <silent> <leader>jj :term godot4 --resolution 900x480 --position 2070,750 -t --path /home/ryk/jams/survivor<CR>
+
 nnoremap <silent> <leader>jj :call RunCurrentGodot(1)<CR>
 " nnoremap <silent><leader>gg :term godot4 -t --position 2070,750 --resolution 900x480 --path /home/ryk/godot/p25_test /home/ryk/godot/p25_test/scenes/main.tscn<CR>
 "
@@ -252,12 +252,16 @@ func! ImportCurrentGodot()
 endfun
 func! RunCurrentGodot(pos=0)
     let path = FindProjectRoot('project.godot')
+    let gd_exe = 'godot4'
+    if g:os.is_mac
+        gd_exe = '/Applications/Godot.app/Contents/MacOS/Godot'
+    endif
     if path isnot 0
         if a:pos is 0
             " --debug-collisions
-            exec 'term godot4 --screen 2 --resolution 1200x688 -t --path '.path
+            exec 'term ' . gd_exe . ' --screen 2 --resolution 1200x688 -t --path '.path
         else
-            exec 'term godot4 --screen 2 --resolution 1200x688 -t --path '.path
+            exec 'term ' . gd_exe . ' --screen 2 --resolution 1200x688 -t --path '.path
         endif
     else
         echom 'RunGodot: Not in godot project directory!'
