@@ -1,6 +1,12 @@
 " ===== General Settings =====
-set guifont=Agave\ Nerd\ Font\ Mono\ 16
-set guifontwide=WenQuanYi\ Micro\ Hei\ Mono\ 14
+if g:os.is_mac
+    " set guifont=Droid\ Sans\ Mono\ for\ Powerline:h18
+    " set guifont=3270NF:h24
+    set guifont=AgaveNF-Regular:h24
+else
+    set guifont=Agave\ Nerd\ Font\ Mono\ 16
+    set guifontwide=WenQuanYi\ Micro\ Hei\ Mono\ 14
+endif
 
 " ===== Key Mappings =====
 let mapleader = "\<Space>"
@@ -108,6 +114,7 @@ nnoremap <leader>gr :term godot4 --path /home/ryk/godot/SLG_P2 --editor<CR>
 nnoremap <leader>gt :term godot4 --path /home/ryk/godot/SLG_P2 /home/ryk/godot/SLG_P2/temp/MainCover.tscn<CR>
 nnoremap <leader>rt :term godot4 --headless --path /home/ryk/godot/SLG_P2 -s /home/ryk/godot/SLG_P2/temp/min_test.gd<CR>
 nnoremap <leader>rv :sp /home/ryk/godot/SLG_P2/temp/min_test.gd<CR>
+nnoremap <leader>jj :term /Applications/Godot.app/Contents/MacOS/Godot --path /Users/gu_fan/jams/wild_writer<CR>
 
 " ===== Timer Function =====
 let s:timer_id = -1
