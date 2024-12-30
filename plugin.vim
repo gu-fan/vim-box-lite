@@ -58,50 +58,50 @@ Plug 'tpope/vim-apathy'
 aug au_js "{{{
     au!
 aug END "}}}
-nmap gj :echo FindRoot(expand('<cfile>'))<CR>
+" nmap gj :echo FindRoot(expand('<cfile>'))<CR>
 
-fun! CheckValid(path, ext, idx)
-    let path = a:path
-    let ext = a:ext
-    let idx = a:idx
-    " echom path . ext
-    " echom filereadable(path . ext )
-    " echom path . idx
-    " echom filereadable(path . idx )
-    if filereadable(path . ext )
-        return [1, path . ext]
-    elseif filereadable(path . idx)
-        return [2, path . idx]
-    elseif isdirectory(path )
-        return [3, path ]
-    else
-        return [0,0]
-    endif
-endfun
-fun! FindRoot(name)
-    if (a:name =~ '^@' )
-        let path = substitute(a:name,'^@','src','') 
-    else
-        let path = 'node_modules/' . a:name 
-    endif
-    echoe path
-let path = 'node_modules/' . a:name 
+" fun! CheckValid(path, ext, idx)
+"     let path = a:path
+"     let ext = a:ext
+"     let idx = a:idx
+"     " echom path . ext
+"     " echom filereadable(path . ext )
+"     " echom path . idx
+"     " echom filereadable(path . idx )
+"     if filereadable(path . ext )
+"         return [1, path . ext]
+"     elseif filereadable(path . idx)
+"         return [2, path . idx]
+"     elseif isdirectory(path )
+"         return [3, path ]
+"     else
+"         return [0,0]
+"     endif
+" endfun
+" fun! FindRoot(name)
+"     if (a:name =~ '^@' )
+"         let path = substitute(a:name,'^@','src','') 
+"     else
+"         let path = 'node_modules/' . a:name 
+"     endif
+"     echoe path
+" let path = 'node_modules/' . a:name 
 
-    let ext = '.js'
-    let idx = '/index.js'
-    let i = 0
-    let full = CheckValid(path, ext, idx)
-    echoe full
-    while i < 5
-        let path = '../'. path
-        let i+=1
-        let full = CheckValid(path, ext, idx)
+"     let ext = '.js'
+"     let idx = '/index.js'
+"     let i = 0
+"     let full = CheckValid(path, ext, idx)
+"     echoe full
+"     while i < 5
+"         let path = '../'. path
+"         let i+=1
+"         let full = CheckValid(path, ext, idx)
 
-        if full[0] != 0
-            return full[1]
-        endif
-    endwhile
-endfun
+"         if full[0] != 0
+"             return full[1]
+"         endif
+"     endwhile
+" endfun
 
 aug au_js "{{{
     au!
@@ -297,14 +297,77 @@ Plug 'maksimr/vim-jsbeautify' , { 'do': 'git submodule update --init --recursive
 "
 
 " Plug 'Shougo/neocomplcache'
-"
-" Plug 'Shougo/deoplete.nvim'
-" Plug 'roxma/nvim-yarp'
-" Plug 'roxma/vim-hug-neovim-rpc'
-" let g:deoplete#enable_at_startup = 0
+" if has('nvim')
+"   Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+" else
+"   Plug 'Shougo/deoplete.nvim'
+"   Plug 'roxma/nvim-yarp'
+"   Plug 'roxma/vim-hug-neovim-rpc'
+" endif
 " let g:deoplete#enable_at_startup = 1
 
+" inoremap <silent><expr> <TAB>
+" \ pumvisible() ? "\<C-n>" :
+" \ <SID>check_back_space() ? "\<TAB>" :
+" \ deoplete#manual_complete()
+" function! s:check_back_space() abort "{{{
+"   let col = col('.') - 1
+"   return !col || getline('.')[col - 1]  =~ '\s'
+" endfunction "}}}
+
+
 " Plug 'neoclide/coc.nvim', {'branch': 'release'}
+" set signcolumn=yes
+" inoremap <silent><expr> <TAB>
+"       \ coc#pum#visible() ? coc#pum#next(1) :
+"       \ CheckBackspace() ? "\<Tab>" :
+"       \ coc#refresh()
+" inoremap <expr><S-TAB> coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"
+" inoremap <silent><expr> <CR> coc#pum#visible() ? coc#pum#confirm()
+"                               \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+
+" function! CheckBackspace() abort
+"   let col = col('.') - 1
+"   return !col || getline('.')[col - 1]  =~# '\s'
+" endfunction
+
+" " Use <c-space> to trigger completion
+" if has('nvim')
+"   inoremap <silent><expr> <c-space> coc#refresh()
+" else
+"   inoremap <silent><expr> <c-@> coc#refresh()
+" endif
+
+" " Use `[g` and `]g` to navigate diagnostics
+" " Use `:CocDiagnostics` to get all diagnostics of current buffer in location list
+" nmap <silent> [g <Plug>(coc-diagnostic-prev)
+" nmap <silent> ]g <Plug>(coc-diagnostic-next)
+
+" " GoTo code navigation
+" nmap <silent> gd <Plug>(coc-definition)
+" nmap <silent> gy <Plug>(coc-type-definition)
+" nmap <silent> gi <Plug>(coc-implementation)
+" nmap <silent> gr <Plug>(coc-references)
+
+" " Use K to show documentation in preview window
+" nnoremap <silent> K :call ShowDocumentation()<CR>
+
+" " Applying code actions to the selected code block
+" " Example: `<leader>aap` for current paragraph
+" xmap <leader>a  <Plug>(coc-codeaction-selected)
+" nmap <leader>a  <Plug>(coc-codeaction-selected)
+
+" " Remap keys for applying code actions at the cursor position
+" nmap <leader>ac  <Plug>(coc-codeaction-cursor)
+" " Remap keys for apply code actions affect whole buffer
+" nmap <leader>as  <Plug>(coc-codeaction-source)
+" " Apply the most preferred quickfix action to fix diagnostic on the current line
+" nmap <leader>qf  <Plug>(coc-fix-current)
+
+" " Remap keys for applying refactor code actions
+" nmap <silent> <leader>re <Plug>(coc-codeaction-refactor)
+" xmap <silent> <leader>r  <Plug>(coc-codeaction-refactor-selected)
+" nmap <silent> <leader>r  <Plug>(coc-codeaction-refactor-selected)
 " inoremap <silent><expr> <TAB>
 "       \ pumvisible() ? "\<C-n>" :
 "       \ <SID>check_back_space() ? "\<TAB>" :
@@ -318,15 +381,32 @@ Plug 'maksimr/vim-jsbeautify' , { 'do': 'git submodule update --init --recursive
 " set shortmess+=c
 " set updatetime=300
 
+" ----------------------------------
+Plug 'Konfekt/complete-common-words.vim'
+let s:dotfiles = split(&runtimepath, ',')[0]
+let g:common_words_dicts_dir = s:dotfiles . '/plugged/complete-common-words.vim/dicts'
+unlet s:dotfiles
+" set complete+=k
+" set dictionary+=spell
+
 Plug 'lifepillar/vim-mucomplete'
 set completeopt+=menuone
 set completeopt+=noselect
+set completeopt-=preview
+set completeopt+=popup
 set shortmess+=c   " Shut off completion messages
 let g:mucomplete#enable_auto_at_startup = 1
 imap <expr> <down> mucomplete#extend_fwd("\<down>")
+let g:mucomelete#always_use_completeopt=  1
+
+
+" set complete+=i
+" 
 
 let g:mucomplete#chains = {}
-let g:mucomplete#chains.default = ['path', 'nsnp', 'keyn']
+let g:mucomplete#chains.default = ['path', 'nsnp', 'keyn', "c-n", "dict"]
+
+" ----------------------------------
 " inoremap <silent> <expr> <plug><MyCR>
 "     \ mucomplete#neosnippet#expand_snippet("\<cr>")
 " imap <cr> <plug><MyCR>
@@ -556,7 +636,6 @@ nmap <c-k> a<c-k><esc>
 imap <C-k>     <Plug>(neosnippet_expand_or_jump)
 smap <C-k>     <Plug>(neosnippet_expand_or_jump)
 xmap <C-k>     <Plug>(neosnippet_expand_target)
-
 " ino <expr>.   pumvisible() ? "." : "."
 " ino <expr><TAB>   pumvisible() ? "\<C-n>" : "\<TAB>"
 " ino <expr><s-TAB> pumvisible() ? "\<C-p>" : "\<s-TAB>"
@@ -567,6 +646,16 @@ xmap <C-k>     <Plug>(neosnippet_expand_target)
 " smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
 " \ "\<Plug>(neosnippet_expand_or_jump)"
 " \: "\<TAB>"
+"
+" inoremap <silent><expr> <TAB>
+" \ pumvisible() ? "\<C-n>" :
+" \ <SID>check_back_space() ? "\<TAB>" :
+" \ deoplete#manual_complete()
+" function! s:check_back_space() abort "{{{
+"   let col = col('.') - 1
+"   return !col || getline('.')[col - 1]  =~ '\s'
+" endfunction "}}}
+"
 
 " For snippet_complete marker.
 if has('conceal')
@@ -606,7 +695,7 @@ Plug 'tpope/vim-surround'
 
 " document
 " Plug 'gu-fan/simpletodo.vim'
-Plug 'rykka/riv.vim'
+Plug 'gu-fan/riv.vim'
 
 let proj1 = {'path': '~/Documents/wikis/wiki_new/'}
 let proj2 = {'path': '~/Documents/wikis/riv/'}
@@ -619,13 +708,13 @@ let g:riv_file_link_ext ="vim,py,rb,js,css,vue,yml,json,html,htm,gd"
 let g:riv_web_browser = "google chrome"
 let g:riv_todo_levels = " ,x"
 
-Plug 'rykka/autotype.vim'
+Plug 'gu-fan/autotype.vim'
 " Plug 'rykka/os.vim'
 " Plug 'rykka/clickable.vim'
 " let g:clickable_browser = 'google chrome'
 " Plug 'rykka/clickable-things'
 " Plug 'rykka/autotype.vim'
-Plug 'rykka/InstantRst'
+Plug 'gu-fan/InstantRst'
 
 " Plug 'vim-jp/vital.vim'
 
@@ -725,15 +814,15 @@ Plug 'kien/ctrlp.vim'
 " nmap <C-J>  :CtrlPLine<CR>
 let g:ctrlp_custom_ignore =  {
     \ 'dir':  '\v[\/](\.(git|hg|svn)|node_modules|dist|backup|.import)$',
-    \ 'file': '\v\.(exe|so|dll|meta|png|jpg|psd|asset|ttf|otf|import|aesprite)$',
+    \ 'file': '\v\.(exe|so|dll|meta|png|jpg|psd|asset|ttf|otf|import|aseprite|ase)$',
     \ }
 let g:ctrlp_use_cache = 1
 let g:ctrlp_root_markers=['.git', 'package.json', 'package.vim','.root', 'project.godot']
 let g:ctrlp_switch_buffer = 'v'
 let g:ctrlp_prompt_mappings = { 'PrtClearCache()': ['<F5>', '<m-5>'] }
-let g:ctrlp_user_command = 'ag %s -l --nocolor --ignore ".git/" --hidden -g ""'
+let g:ctrlp_user_command = 'ag %s -l --nocolor --ignore={".git/","addons/","*.png","*.aseprite"} --hidden -g ""'
 " let g:ctrlp_user_command = 'ag %s -l --nocolor --hidden -g ""'
-set wildignore+=*/.git/*,*/.hg/*,*/.svn/*,*/node_modules/*,.DS_Store,default-0.json
+set wildignore+=*/.git/*,*/.hg/*,*/.svn/*,*/node_modules/*,.DS_Store,default-0.json,*.png,*.aseprite
 
 " let g:ctrlp_working_path_mode = 'wr'
 " fun! V(...)
@@ -1212,43 +1301,41 @@ Plug 'navarasu/onedark.nvim'
 " -------------------------------------------
 " Plug 'prabirshrestha/vim-lsp'
 " Plug 'mattn/vim-lsp-settings'
-" if executable('pylsp')
-    " " pip install python-lsp-server
-    " au User lsp_setup call lsp#register_server({
-    "     \ 'name': 'godot',
-    "     \ 'cmd': {server_info->['pylsp']},
-    "     \ 'allowlist': ['python'],
-    "     \ })
-" " endif
 
-" function! s:on_lsp_buffer_enabled() abort
-"     setlocal omnifunc=lsp#complete
-"     setlocal signcolumn=yes
-"     if exists('+tagfunc') | setlocal tagfunc=lsp#tagfunc | endif
-"     nmap <buffer> gd <plug>(lsp-definition)
-"     nmap <buffer> gs <plug>(lsp-document-symbol-search)
-"     nmap <buffer> gS <plug>(lsp-workspace-symbol-search)
-"     nmap <buffer> gr <plug>(lsp-references)
-"     nmap <buffer> gi <plug>(lsp-implementation)
-"     nmap <buffer> gt <plug>(lsp-type-definition)
-"     nmap <buffer> <leader>rn <plug>(lsp-rename)
-"     nmap <buffer> [g <plug>(lsp-previous-diagnostic)
-"     nmap <buffer> ]g <plug>(lsp-next-diagnostic)
-"     nmap <buffer> K <plug>(lsp-hover)
-"     nnoremap <buffer> <expr><c-f> lsp#scroll(+4)
-"     nnoremap <buffer> <expr><c-d> lsp#scroll(-4)
-
-"     let g:lsp_format_sync_timeout = 1000
-"     autocmd! BufWritePre *.rs,*.go call execute('LspDocumentFormatSync')
-    
-"     " refer to doc to add more commands
+        " \ 'cmd': ["nc", "localhost", "6005"],
+" let g:lsp_auto_enable = 0
+" com! -nargs=0 LspStart call lsp#enable()
+" com! -nargs=0 LspStop call lsp#disable()
+" com! -nargs=0 LspGodot call LspSetupGodotServer
+" function! LspSetupGodotServer() abort
+"         call lsp#register_server({
+"         \ 'name': 'godot',
+"         \ 'tcp': {server_info->['tcp', '127.0.0.1:6005']},
+"         \ 'root_uri':{server_info->lsp#utils#path_to_uri(
+"         \        lsp#utils#get_buffer_path(),
+"         \        ['godot.project', '.git/']
+"         \    )},
+"         \ 'allowlist': ['gdscript3', 'gdscript']
+"         \ })
 " endfunction
+" au User lsp_setup 
+"         \ call lsp#register_server({
+"         \ 'name': 'godot',
+"         \ 'tcp': {server_info->['tcp', '127.0.0.1:6005']},
+"         \ 'root_uri':{server_info->lsp#utils#path_to_uri(
+"         \        lsp#utils#get_buffer_path(),
+"         \        ['godot.project', '.git/']
+"         \    )},
+"         \ 'allowlist': ['gdscript3', 'gdscript']
+"         \ })
 
-" augroup lsp_install
-"     au!
-"     " call s:on_lsp_buffer_enabled only for languages that has the server registered.
-"     autocmd User lsp_buffer_enabled call s:on_lsp_buffer_enabled()
-" augroup END
+" nmap gh :LspHover<CR>
+" nmap gk :LspPeekDeclaration<CR>
+" nmap gn :LspNextDiagnostic<CR>
+" nmap gp :LspPreviousDiagnostic<CR>
+" nnoremap <expr>gsu lsp#scroll(+4)
+" nnoremap <expr>gsd lsp#scroll(-4)
+"
 " Plug 'thaerkh/vim-workspace'
 " let g:workspace_autocreate = 1
 " nnoremap <leader>tt :ToggleWorkspace<CR>
@@ -1273,6 +1360,45 @@ Plug 'liuchengxu/vim-which-key', { 'on': ['WhichKey', 'WhichKey!'] }
 nnoremap <silent> <leader> :WhichKey '<Space>'<CR>
 set timeoutlen=500
 
+" Plug 'dense-analysis/ale'
+" let g:ale_fixers = {
+" \   'gdscript': ['gdlint'],
+" \}
 " Plug 'maxbrunsfeld/vim-yankstack'
+"
+
+
+" Plug 'prabirshrestha/vim-lsp'
+
+if has("nvim")
+    " Plug 'stevearc/dressing.nvim'
+  Plug 'folke/noice.nvim'
+  Plug 'MunifTanjim/nui.nvim'
+  " Plug 'williamboman/mason.nvim'
+  " Plug 'mfussenegger/nvim-lint'
+  " Plug "rshkarin/mason-nvim-lint"
+  Plug 'nvzone/volt'
+  " Plug 'nvzone/timerly' , {'on': ['TimerlyToggle']}
+  Plug 'nvzone/timerly'
+endif
+
+
+Plug '~/vim/moon'
 
 call plug#end()
+
+if has("nvim")
+    lua require("noice").setup()
+    " lua require("mason").setup()
+    " lua require("lint").setup()
+    " lua require("mason-nvim-lint").setup()
+    
+    " luafile ~/.vim-box/user.lua
+
+    " au BufWritePost * lua require('lint').try_lint()
+endif
+
+" let g:ale_lint_on_enter = 0
+" let g:ale_lint_on_save = 1
+" nmap <silent> <leader>nn <Plug>(ale_next_wrap)
+

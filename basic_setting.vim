@@ -21,10 +21,14 @@ set suffixesadd+=.js,.css,.html,.vim,.vue,.gd,.py
 set ttimeoutlen=0
 set path+=/usr/local/bin,/home/ryk/bin
 
-if has('unnamedplus')
-    set clipboard=autoselectplus,unnamedplus,exclude:cons\|linux
+if has('nvim')
+    set clipboard+=unnamedplus
 else
-    set clipboard=autoselect,unnamed
+    if has('unnamedplus')
+        set clipboard=autoselectplus,unnamedplus,exclude:cons\|linux
+    else
+        set clipboard=autoselect,unnamed
+    endif
 endif
 
 set nocompatible
@@ -61,7 +65,6 @@ set wildmode=list:longest,full
 set laststatus=2
 set statusline=%<%f\ %h%m%r%=%-14.(%l,%c%V%)\ %P
 
-
 set scrolloff=1
 set sidescroll=1
 set sidescrolloff=2
@@ -90,16 +93,26 @@ nnoremap <leader>nn :call ToggleNumber()<CR>
 
 " Backups and Undo
 set backup
-set backupdir=$HOME/.vim/tmp/backup//
-set directory=$HOME/.vim/tmp/swap//
-set undodir=$HOME/.vim/tmp/undo//
-set viminfo+=n$HOME/.vim/tmp/viminfo
+if has('nvim')
+    set backupdir=~/.vim/ntmp/backup//
+    set directory=~/.vim/ntmp/swap//
+    set undodir=~/.vim/ntmp/undo//
+    set shada='50,<1000,s100,:100,n~/.vim/ntmp/shada
+    silent! call mkdir(expand('~/.vim/ntmp/backup'), 'p')
+    silent! call mkdir(expand('~/.vim/ntmp/swap'), 'p')
+    silent! call mkdir(expand('~/.vim/ntmp/undo'), 'p')
+else
+    set backupdir=$HOME/.vim/tmp/backup//
+    set directory=$HOME/.vim/tmp/swap//
+    set undodir=$HOME/.vim/tmp/undo//
+    set viminfo='50,<1000,s100,:100,n$HOME/.vim/tmp/viminfo
+    silent! call mkdir(expand('~/.vim/tmp/backup'), 'p')
+    silent! call mkdir(expand('~/.vim/tmp/swap'), 'p')
+    silent! call mkdir(expand('~/.vim/tmp/undo'), 'p')
+endif
 set undofile
 set undoreload=1000
 set noswapfile
-silent! call mkdir(expand('~/.vim/tmp/backup'), 'p')
-silent! call mkdir(expand('~/.vim/tmp/swap'), 'p')
-silent! call mkdir(expand('~/.vim/tmp/undo'), 'p')
 
 set sessionoptions-=options
 set viewoptions-=options

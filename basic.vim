@@ -681,7 +681,8 @@ function! s:file_man() "{{{
     elseif g:os.is_mac
         sil exec "!open '%:p:h'"
     else
-        sil exec "!nemo %:p"
+        " sil exec "!nemo %:p"
+        sil call job_start(['nemo', expand('%:p')])
     endif
 endfunction "}}}
 function! s:terminal() "{{{

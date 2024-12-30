@@ -29,6 +29,13 @@ noremap <c-4> <c-x>
 vnoremap <c-3> <c-a>
 vnoremap <c-4> <c-x>
 
+
+nnoremap <M-j> :m .+1<CR>==
+nnoremap <M-k> :m .-2<CR>==
+vnoremap <M-j> :m '>+1<CR>gv-gv
+vnoremap <M-k> :m '<-2<CR>gv-gv
+
+
 " ===== Custom Functions =====
 " Get project root directory
 function! s:get_root()
@@ -47,8 +54,12 @@ function! s:change_and_ag()
     exec 'sp '. root. 'README.rst'
     Ag
 endfunction
-command! -bang -nargs=* GGrep call <SID>change_and_ag()
+" command! -bang -nargs=* GGrep call <SID>change_and_ag()
 nnoremap <leader>ga :call <SID>change_and_ag()<CR>
+command! -bang -nargs=* GGrep
+  \ call fzf#vim#grep(
+  \   'git grep --line-number -- '.fzf#shellescape(<q-args>),
+  \   fzf#vim#with_preview({'dir': systemlist('git rev-parse --show-toplevel')[0]}), <bang>0)
 
 " ===== Plugin Configurations =====
 " Startify
@@ -83,10 +94,6 @@ augroup lsp_install
 augroup END
 
 " ===== Filetype-specific Settings =====
-augroup filetype_specific
-    autocmd!
-    autocmd BufRead,BufNewFile *.gd setlocal shiftwidth=4 expandtab tabstop=4 softtabstop=4
-augroup END
 
 " ===== Custom Commands =====
 command! -bang -nargs=1 E edit <args>
@@ -101,11 +108,11 @@ iabbrev hide_silouette hide_silhouette
 iabbrev show_silouette show_silhouette
 
 " ===== Project-specific Mappings =====
-nnoremap <leader>gg :term godot4 --path /home/ryk/godot/p25_test /home/ryk/godot/p25_test/scenes/main.tscn<CR>
-nnoremap <leader>gf :term godot4 --screen 0 -f --path /home/ryk/godot/p25_test /home/ryk/godot/p25_test/scenes/main.tscn<CR>
+" nnoremap <leader>jj :term godot4 --path /home/ryk/jams/week_rectxian /home/ryk/jams/week_rectxian/main.tscn<CR>
+" nnoremap <leader>gf :term godot4 --screen 0 -f --path /home/ryk/godot/p25_test /home/ryk/godot/p25_test/scenes/main.tscn<CR>
 nnoremap <leader>gv :term godot4 --verbose --path /home/ryk/godot/p25_test /home/ryk/godot/p25_test/scenes/main.tscn<CR>
 nnoremap <leader>gr :term godot4 --path /home/ryk/godot/SLG_P2 --editor<CR>
-nnoremap <leader>gt :term godot4 --path /home/ryk/godot/SLG_P2 /home/ryk/godot/SLG_P2/temp/MainCover.tscn<CR>
+" nnoremap <leader>gt :term godot4 --path /home/ryk/godot/SLG_P2 /home/ryk/godot/SLG_P2/temp/MainCover.tscn<CR>
 nnoremap <leader>rt :term godot4 --headless --path /home/ryk/godot/SLG_P2 -s /home/ryk/godot/SLG_P2/temp/min_test.gd<CR>
 nnoremap <leader>rv :sp /home/ryk/godot/SLG_P2/temp/min_test.gd<CR>
 
@@ -139,7 +146,6 @@ function! s:notify(txt)
             \ time: 4000,
             \ })
 endfunction
-
 nnoremap <silent><leader>t1 :call <SID>sleep_await(1)<CR>
 nnoremap <silent><leader>t2 :call <SID>sleep_await(3)<CR>
 nnoremap <silent><leader>t3 :call <SID>sleep_await(5)<CR>
@@ -147,28 +153,149 @@ nnoremap <silent><leader>t4 :call <SID>sleep_await(10)<CR>
 nnoremap <silent><leader>t5 :call <SID>sleep_await(20)<CR>
 nnoremap <silent><leader>t6 :call <SID>sleep_await(40)<CR>
 
+nnoremap <silent><leader>c1 :call <SID>chafa(40)<CR>
+fun! s:chafa(txt)
+    let buf = term_start(['chafa', '-s', '40x20', expand('~/Desktop/627f7b1b3e0bcae5c7ed38e219587251.jpg')], #{hidden:1})
+	let winid = popup_create(buf, #{minwidth: 40, minheight: 20})
+	" let winid = popup_create(buf, #{minwidth: 40, minheight: 20, drag: v:true, border:[1,1,1,1], borderchars:['-', '|', '-', '|', '┌', '┐', '┘', '└']})
+	call win_execute(winid, 'noremap <buffer><nowait> q :q<CR>')
+endfun
+
+
 " ===== Aseprite Layer Splitting =====
 command! -nargs=1 Asplit call <SID>split_layers(<f-args>)
+command! -nargs=0 AsplitAll call <SID>split_all()
+function! s:split_all()
+    call s:split_layers('full')
+    call s:split_layers('base_char')
+    call s:split_layers('base_outline')
+    call s:split_layers('base_hand')
+    call s:split_layers('cloak')
+    call s:split_layers('wing')
+    call s:split_layers('weapon')
+    for lyr in ['cleric', 'fighter', 'ranger']
+        call s:split_layers(lyr)
+    endfor
+endfunction
 function! s:split_layers(layer)
-    execute 'cd /home/ryk/godot/p25_test/assets/units/hero/'
+    execute 'cd /home/ryk/godot/p25_test/assets/units/hero '
     if a:layer == 'full'
         call s:full_layers()
     elseif a:layer == 'weapon'
         for lyr in ['sword', 'violin', 'shield', 'spear', 'bow']
-            call s:run_split(lyr)
+            call s:run_split(lyr, 256, 'weapon/')
         endfor
     elseif index(['mage', 'fighter', 'rogue', 'ranger', 'cleric', 'vil0'], a:layer) != -1
         call s:run_split(a:layer . '_h', 512)
         call s:run_split(a:layer . '_b', 512)
+    elseif index(['wing', 'base_hand'], a:layer) != -1
+        call s:run_split(a:layer, 512)
     else
         call s:run_split(a:layer)
     endif
 endfunction
 
-function! s:run_split(layer, size=128)
-    execute "!aseprite -b --layer=" . a:layer . " anim_runner_v1.aseprite --sheet tex_".a:layer.".png --data data_".a:layer.".json --sheet-width=" . a:size ." --trim --merge-duplicates --list-tags --ignore-empty --filename-format '{layer}:{frame}'"
+function! s:run_split(layer, size=256, prefix='')
+    execute "!aseprite -b --layer=" . a:layer . " anim_runner_v2.aseprite --sheet ". a:prefix."tex_".a:layer.".png --data ".a:prefix."data_".a:layer.".json --sheet-width=" . a:size ." --trim --merge-duplicates --list-tags --ignore-empty --filename-format '{layer}:{frame}'"
 endfunction
 
 function! s:full_layers()
-    execute "!aseprite -b --all-layers --split-layers anim_runner_v1.aseprite --sheet tex_full.png --data data_full.json --sheet-width=256 --trim --merge-duplicates --list-tags --ignore-empty --filename-format '{layer}:{frame}'"
+    execute "!aseprite -b --all-layers --split-layers anim_runner_v2.aseprite --sheet tex_full.png --data data_full.json --sheet-width=256 --trim --merge-duplicates --list-tags --ignore-empty --filename-format '{layer}:{frame}'"
 endfunction
+
+
+com! VTrim call VTrim()
+function! VTrim()
+    sil! %s#\s\+$##g
+    sil! %s#。$##g
+    sil! %s#，$##g
+    " sil! %s#:#：#g
+    sil! %s#;#；#g
+    sil! %s#(#（#g
+    sil! %s#)#）#g
+    w!
+endfun
+com! VSplit call VSplit()
+function! VSplit()
+    sil! %s#。#。\r#g
+    sil! %s#，#，\r#g
+    w!
+endfun
+
+augroup filetype_specific
+    autocmd!
+    autocmd BufRead,BufNewFile *.gd setlocal shiftwidth=4 expandtab tabstop=4 softtabstop=4
+augroup END
+
+" nnoremap <silent> <leader>jj :term godot4 --resolution 900x480 --position 2070,750 -t --path /home/ryk/jams/survivor<CR>
+nnoremap <silent> <leader>jj :call RunCurrentGodot(1)<CR>
+" nnoremap <silent><leader>gg :term godot4 -t --position 2070,750 --resolution 900x480 --path /home/ryk/godot/p25_test /home/ryk/godot/p25_test/scenes/main.tscn<CR>
+"
+
+nnoremap <silent><leader>gg :call RunCurrentGodot(0)<CR>
+nnoremap <silent><leader>gi :call ImportCurrentGodot()<CR>
+nnoremap <silent><leader>gf :call RunCurrentScene()<CR>
+func! ImportCurrentGodot()
+    let path = FindProjectRoot('project.godot')
+    if path isnot 0
+        exec 'term godot4 --import --path '.path
+    else
+        echom 'ImportGodot: Not in godot project directory!'
+    end
+endfun
+func! RunCurrentGodot(pos=0)
+    let path = FindProjectRoot('project.godot')
+    if path isnot 0
+        if a:pos is 0
+            " --debug-collisions
+            exec 'term godot4 --screen 2 --resolution 1200x688 -t --path '.path
+        else
+            exec 'term godot4 --screen 2 --resolution 1200x688 -t --path '.path
+        endif
+    else
+        echom 'RunGodot: Not in godot project directory!'
+
+    end
+endfun
+func! RunCurrentScene()
+    let project_path = FindProjectRoot('project.godot')
+    if project_path is 0
+        echom 'RunCurrentScene: Not in godot project directory!'
+        return
+    end
+    let scene_path = FindCurrentScene()
+    if scene_path isnot 0
+        exec 'term godot4 --resolution 1200x688 --position 1070,750 -t --path '. project_path . ' ' . scene_path
+    else
+        echom 'RunCurrentScene: Scene not found!'
+    end
+endfun
+function! FindCurrentScene()
+    let currentScene = expand('%:p:r') . '.tscn'
+    if filereadable(currentScene)
+        return currentScene
+    else
+        return 0
+    endif
+endfunction
+function! FindProjectRoot(lookFor)
+    let pathMaker='%:p'
+    while(len(expand(pathMaker))>len(expand(pathMaker.':h')))
+        let pathMaker=pathMaker.':h'
+        let fileToCheck=expand(pathMaker).'/'.a:lookFor
+        if filereadable(fileToCheck)||isdirectory(fileToCheck)
+            return expand(pathMaker)
+        endif
+    endwhile
+    return 0
+endfunction
+
+" set path+=$HOME/.local/bin,$HOME/.pyenv/shims,$HOME/.pyenv/bin
+"
+" create godot project with template 
+" _common directory
+" _2d_common
+" _3d_common
+" _platform_common
+" _bug_common
+"
