@@ -382,10 +382,10 @@ Plug 'maksimr/vim-jsbeautify' , { 'do': 'git submodule update --init --recursive
 " set updatetime=300
 
 " ----------------------------------
-Plug 'Konfekt/complete-common-words.vim'
-let s:dotfiles = split(&runtimepath, ',')[0]
-let g:common_words_dicts_dir = s:dotfiles . '/plugged/complete-common-words.vim/dicts'
-unlet s:dotfiles
+" Plug 'Konfekt/complete-common-words.vim'
+" let s:dotfiles = split(&runtimepath, ',')[0]
+" let g:common_words_dicts_dir = s:dotfiles . '/plugged/complete-common-words.vim/dicts'
+" unlet s:dotfiles
 " set complete+=k
 " set dictionary+=spell
 

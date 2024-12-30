@@ -3,6 +3,8 @@ if g:os.is_mac
     " set guifont=Droid\ Sans\ Mono\ for\ Powerline:h18
     " set guifont=3270NF:h24
     set guifont=AgaveNF-Regular:h24
+elseif g:os.is_windows
+    set guifont=Agave_Nerd_Font:h20:cANSI:qDRAFT
 else
     set guifont=Agave\ Nerd\ Font\ Mono\ 16
     set guifontwide=WenQuanYi\ Micro\ Hei\ Mono\ 14
