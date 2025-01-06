@@ -241,6 +241,16 @@ nnoremap <silent> <leader>jj :call RunCurrentGodot(1)<CR>
 " nnoremap <silent><leader>gg :term godot4 -t --position 2070,750 --resolution 900x480 --path /home/ryk/godot/p25_test /home/ryk/godot/p25_test/scenes/main.tscn<CR>
 "
 
+nnoremap <silent><leader>jt :call RunCurrentFile()<CR>
+func! RunCurrentFile()
+    let project_path = FindProjectRoot('project.godot')
+    if project_path is 0
+        echom 'RunCurrentScene: Not in godot project directory!'
+        return
+    end
+    let scene_path = expand('%:p')
+    exec 'term godot4 --resolution 1200x688 --position 1070,750 -t --path '. project_path . ' ' . scene_path
+endfun
 nnoremap <silent><leader>gg :call RunCurrentGodot(0)<CR>
 nnoremap <silent><leader>gi :call ImportCurrentGodot()<CR>
 nnoremap <silent><leader>gf :call RunCurrentScene()<CR>
