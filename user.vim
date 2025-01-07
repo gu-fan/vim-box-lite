@@ -248,8 +248,12 @@ func! RunCurrentFile()
         echom 'RunCurrentScene: Not in godot project directory!'
         return
     end
+    let gd_exe = 'godot4'
+    if g:os.is_mac
+        let gd_exe = '/Applications/Godot.app/Contents/MacOS/Godot'
+    endif
     let scene_path = expand('%:p')
-    exec 'term godot4 --resolution 1200x688 --position 1070,750 -t --path '. project_path . ' ' . scene_path
+    exec 'term ' . gd_exe . ' --resolution 1200x688 --position 1070,750 -t --path '. project_path . ' ' . scene_path
 endfun
 nnoremap <silent><leader>gg :call RunCurrentGodot(0)<CR>
 nnoremap <silent><leader>gi :call ImportCurrentGodot()<CR>
@@ -277,7 +281,6 @@ func! RunCurrentGodot(pos=0)
         endif
     else
         echom 'RunGodot: Not in godot project directory!'
-
     end
 endfun
 func! RunCurrentScene()
