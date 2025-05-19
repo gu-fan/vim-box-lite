@@ -29,20 +29,23 @@ options     word
 
 snippet     .cust
 options     word
-    .custom_minimum_size = Vector2(${0:10,10})
+    .custom_minimum_size = Vector2(${0:40,40})
 
-snippet     .horz_center
+snippet     .horz
 options     word
     .horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 
-
-snippet     .vert_center
+snippet     .vert
 options     word
     .vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 
 snippet     wait
 options     head
     await Util.wait(${0:0.1})
+
+snippet     frame
+options     head
+    await get_tree().process_frame
 
 snippet     node
     UI.create_node({
@@ -61,11 +64,10 @@ snippet     inst
     load('res://${0:xxx}.tscn').instantiate()
 
 
-snippet     gui_mouse
+snippet     mouse
 options     head
-    func _gui_input(evt):
-        		if evt is InputEventMouseButton and evt.button_index == MOUSE_BUTTON_LEFT and evt.pressed:
-        			${0:pass}
+    if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
+    		${0:pass}
 
 snippet     .mouse_ignore
 options     word
@@ -74,15 +76,198 @@ snippet     .focus_none
 options     word
     .focus_mode = Control.FOCUS_NONE
 
+snippet     .set_style
+options     word
+    .set("theme_override_styles/panel", style)
+
 snippet     .set_font_size
 options     word
     .set("theme_override_font_sizes/font_size", 16)
+snippet     font_size
+options    head 
+    "theme_override_font_sizes/font_size": 16,
 snippet     .set_font_color
 options     word
-    .set("theme_override_colors/font_color", 'FFFFFF')
+    .set("theme_override_colors/font_color", '33FF33')
+snippet     font_color
+options     head
+    "theme_override_colors/font_color": '33FF33',
 snippet     .set_font
 options     word
-    .set("theme_override_fonts/font", G.FONT_PRETTY)
+    .set("theme_override_fonts/font", font)
 snippet    .set_sep
 options     word
     .set('theme_override_constants/separation', ${0:10})
+
+snippet    sep
+options     head
+    "theme_override_constants/separation": 1,
+
+snippet    await
+    await get_tree().create_timer(${0:0.2}).timeout
+
+snippet   init
+options     head
+    func _init():
+    		_setup_components()
+    func _setup_components():
+    		pass
+snippet   setup
+options     head
+    var config = {
+    }
+    func setup(_config={}):
+        config.merge(_config, true)
+
+snippet style_box
+    var style_box = StyleBoxEmpty.new()
+    	style_box.content_margin_left = 4
+    	style_box.content_margin_right = 4
+    	style_box.content_margin_top = 4
+    	style_box.content_margin_bottom = 4
+    	node.set("theme_override_styles/normal", style_box)
+
+snippet style_flat
+    var style_box = StyleBoxFlat.new()
+    	style_box.bg_color = '333333'
+    	style_box.content_margin_left = 4
+    	style_box.content_margin_right = 4
+    	style_box.content_margin_top = 4
+    	style_box.content_margin_bottom = 4
+    	style_box.corner_radius_top_left = 4
+    	style_box.corner_radius_top_right = 4
+    	style_box.corner_radius_bottom_left = 4
+    	style_box.corner_radius_bottom_right = 4
+    	node.set("theme_override_styles/normal", style_box)
+
+snippet .size_horz
+options     word
+    .size_flags_horizontal = Control.SIZE_EXPAND_FILL
+snippet .size_vert
+options     word
+    .size_flags_vertical = Control.SIZE_EXPAND_FILL
+
+snippet test
+    extends CanvasLayer
+
+    func _ready():
+    		var ui = UIMini.at('TR', self)
+    		ui.btn("cmd", func():
+    			print("TEST")
+    		)
+
+snippet     button
+options     head
+	var button = Button.new()
+	button.text = "${1:Text}"
+	button.pressed.connect(func(): ${2:print("pressed")})
+	${3}add_child(button)
+
+snippet     label
+options     head
+	var label = Label.new()
+	label.text = "${1:Text}"
+	${2}add_child(label)
+
+snippet     rect
+options     head
+	var rect = ColorRect.new()
+	rect.color = Color.RED
+	rect.custom_minimum_size = Vector2(100, 100)
+	${1}add_child(rect)
+
+snippet     vbox
+options     head
+	var vbox = VBoxContainer.new()
+	vbox.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	vbox.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	${1}add_child(vbox)
+
+snippet     hbox
+options     head
+	var hbox = HBoxContainer.new()
+	hbox.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	hbox.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	${1}add_child(hbox)
+
+snippet     assert
+options     word
+	assert(${1:condition}, "${2:message}")	
+
+snippet     file_read
+options     head
+	var file = FileAccess.open("res://${1:path}", FileAccess.READ)
+	if file:
+		var content = file.get_as_text()
+		${2:print(content)}
+
+snippet     file_write
+options     head
+	var file = FileAccess.open("res://${1:path}", FileAccess.WRITE)
+	if file:
+		file.store_string("${2:content}")	
+
+snippet     raycast2d
+options     head
+	var space_state = get_world_2d().direct_space_state
+	var query = PhysicsRayQueryParameters2D.create(${1:from_position}, ${2:to_position})
+	var result = space_state.intersect_ray(query)
+	if not result.is_empty():
+		${3:print(result)}
+
+snippet     area2d
+options     head
+	var area = Area2D.new()
+	var collision_shape = CollisionShape2D.new()
+	var shape = CircleShape2D.new()
+	shape.radius = ${1:10}
+	collision_shape.shape = shape
+	area.add_child(collision_shape)
+	area.body_entered.connect(func(body): ${2:print(body.name)})
+	add_child(area)	
+snippet     global
+    path = ProjectSettings.globalize_path(path)
+
+
+snippet     preset
+	node.set_anchors_preset(Control.PRESET_FULL_RECT)
+	node.set_offsets_preset(Control.PRESET_FULL_RECT, 3)
+
+snippet     uicon
+    {
+        		"type": "Control",
+        		"custom_minimum_size": Vector2(10, 10),
+    	},
+snippet     uilabel
+    {
+        		"type": "Label",
+        		"text": "Text",
+        		"horizontal_alignment": HORIZONTAL_ALIGNMENT_CENTER,
+        		"custom_minimum_size": Vector2(100, 20),
+        		"font_size": 18,
+    	},
+
+snippet     uimargin
+    {
+        		"type": "MarginContainer",
+        		"margin":{
+            			"left": 5,
+        		},
+        		"child": {
+        		}
+    	},
+
+snippet     uipanel
+    {
+        		"type": "PanelContainer",
+        		"custom_minimum_size": Vector2(0, 30),
+        		"style": {
+            			"bg_color": Color(0.15, 0.15, 0.15, 1),
+            			"border_color": Color(0.3, 0.3, 0.3, 1.0),
+            			"border_width": 2,
+            			"corner_radius": 5,
+            			"content_margin":2,
+        		},
+        		"child": {
+        		}
+    	},

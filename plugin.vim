@@ -400,11 +400,10 @@ imap <expr> <down> mucomplete#extend_fwd("\<down>")
 let g:mucomelete#always_use_completeopt=  1
 
 
-" set complete+=i
-" 
+set complete+=i
 
-let g:mucomplete#chains = {}
-let g:mucomplete#chains.default = ['path', 'nsnp', 'keyn', "c-n", "dict"]
+" let g:mucomplete#chains = {}
+" let g:mucomplete#chains.default = ['path', 'nsnp', 'keyn', "c-n", "dict"]
 
 " ----------------------------------
 " inoremap <silent> <expr> <plug><MyCR>
@@ -794,7 +793,7 @@ let g:NERDTreeHijackNetrw=0
 " netrw 还是有很多问题，双击会返回上级
 " nerd too
 let g:netrw_mousemaps= 0
-let NERDTreeIgnore=['\~$', '.meta$[[file]]']
+let NERDTreeIgnore=['\~$', '.meta$[[file]]', '.uid', '.DS_Store', '.import']
 
 aug au_NERD
     au!
@@ -813,16 +812,19 @@ Plug 'tpope/vim-vinegar'
 Plug 'kien/ctrlp.vim'
 " nmap <C-J>  :CtrlPLine<CR>
 let g:ctrlp_custom_ignore =  {
-    \ 'dir':  '\v[\/](\.(git|hg|svn)|node_modules|dist|backup|.import)$',
-    \ 'file': '\v\.(exe|so|dll|meta|png|jpg|psd|asset|ttf|otf|import|aseprite|ase)$',
+    \ 'dir':  '\v[\/](\.(git|hg|svn)|node_modules|dist|backup|.import|Shared|Downloads)$',
+    \ 'file': '\v\.(exe|so|dll|meta|png|jpg|psd|asset|ttf|otf|import|aseprite|ase|uid)$',
     \ }
 let g:ctrlp_use_cache = 1
 let g:ctrlp_root_markers=['.git', 'package.json', 'package.vim','.root', 'project.godot']
 let g:ctrlp_switch_buffer = 'v'
 let g:ctrlp_prompt_mappings = { 'PrtClearCache()': ['<F5>', '<m-5>'] }
-let g:ctrlp_user_command = 'ag %s -l --nocolor --ignore={".git/","addons/","*.png","*.aseprite"} --hidden -g ""'
+let g:ctrlp_user_command = 'ag %s -l --nocolor --ignore={".git/","addons/","*.png","*.aseprite","*.uid","*.import"} --hidden -g ""'
 " let g:ctrlp_user_command = 'ag %s -l --nocolor --hidden -g ""'
-set wildignore+=*/.git/*,*/.hg/*,*/.svn/*,*/node_modules/*,.DS_Store,default-0.json,*.png,*.aseprite
+set wildignore+=*/.git/*,*/.hg/*,*/.svn/*,*/node_modules/*,.DS_Store,default-0.json,*.png,*.aseprite,*.uid,*.import
+
+let g:ctrlp_max_depth = 10
+let g:ctrlp_max_files = 2000
 
 " let g:ctrlp_working_path_mode = 'wr'
 " fun! V(...)
@@ -1090,7 +1092,7 @@ nmap <leader>el  :CtrlPLine<CR>
 
 " git 
 Plug 'tpope/vim-fugitive'
-
+Plug 'tpope/vim-rhubarb'
 
 nnore <Leader>gp :Git push<CR>
 nnore <Leader>gP :Git pull<CR>

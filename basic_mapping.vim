@@ -7,6 +7,11 @@ nno <silent><leader>dp :diffput<CR>
 
 nor <Leader>ll :setl list! list?<CR>
 
+inor <C-J> <C-o>j
+inor <C-K> <C-o>k
+inor <C-H> <C-o>h
+inor <C-L> <C-o>l
+
 cmap w!! w !sudo tee % >/dev/null<CR>:e!<CR><CR>
 
 nmap <leader>vv :e ~/.vim/vimrc<CR>

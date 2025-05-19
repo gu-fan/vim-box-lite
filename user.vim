@@ -37,12 +37,10 @@ noremap <c-4> <c-x>
 vnoremap <c-3> <c-a>
 vnoremap <c-4> <c-x>
 
-
 nnoremap <M-j> :m .+1<CR>==
 nnoremap <M-k> :m .-2<CR>==
 vnoremap <M-j> :m '>+1<CR>gv-gv
 vnoremap <M-k> :m '<-2<CR>gv-gv
-
 
 " ===== Custom Functions =====
 " Get project root directory
@@ -235,27 +233,31 @@ augroup filetype_specific
     autocmd BufRead,BufNewFile *.gd setlocal shiftwidth=4 expandtab tabstop=4 softtabstop=4
 augroup END
 
+let s:godot_exe = 'godot'
+" let s:godot_exe = 'godotdev'
+if g:os.is_mac
+    " let s:godot_exe = '/Applications/Godot.app/Contents/MacOS/Godot'
+    let s:godot_exe = '/Users/xrak/dev/godot_dev_4.4/bin/Godot.app/Contents/MacOS/Godot'
+endif
+
 " nnoremap <silent> <leader>jj :term godot4 --resolution 900x480 --position 2070,750 -t --path /home/ryk/jams/survivor<CR>
 
-nnoremap <silent> <leader>jj :call RunCurrentGodot(1)<CR>
+" nnoremap <silent> <leader>gg <Esc>:call RunCurrentGodot(1)<CR>
+nnoremap <silent> <leader>gg <Esc>:call RunCurrentScene()<CR>
 " nnoremap <silent><leader>gg :term godot4 -t --position 2070,750 --resolution 900x480 --path /home/ryk/godot/p25_test /home/ryk/godot/p25_test/scenes/main.tscn<CR>
 "
 
-nnoremap <silent><leader>jt :call RunCurrentFile()<CR>
+nnoremap <silent><leader>jt <Esc>call RunCurrentFile()<CR>
 func! RunCurrentFile()
     let project_path = FindProjectRoot('project.godot')
     if project_path is 0
         echom 'RunCurrentScene: Not in godot project directory!'
         return
     end
-    let gd_exe = 'godot4'
-    if g:os.is_mac
-        let gd_exe = '/Applications/Godot.app/Contents/MacOS/Godot'
-    endif
     let scene_path = expand('%:p')
-    exec 'term ' . gd_exe . ' --resolution 1200x688 --position 1070,750 -t --path '. project_path . ' ' . scene_path
+    exec 'term ' . s:godot_exe . ' --resolution 1200x688 --position 1070,750 -t --path '. project_path . ' ' . scene_path
 endfun
-nnoremap <silent><leader>gg :call RunCurrentGodot(0)<CR>
+" nnoremap <silent><leader>gg :call RunCurrentGodot(0)<CR>
 nnoremap <silent><leader>gi :call ImportCurrentGodot()<CR>
 nnoremap <silent><leader>gf :call RunCurrentScene()<CR>
 func! ImportCurrentGodot()
@@ -268,16 +270,14 @@ func! ImportCurrentGodot()
 endfun
 func! RunCurrentGodot(pos=0)
     let path = FindProjectRoot('project.godot')
-    let gd_exe = 'godot4'
-    if g:os.is_mac
-        let gd_exe = '/Applications/Godot.app/Contents/MacOS/Godot'
-    endif
     if path isnot 0
         if a:pos is 0
             " --debug-collisions
-            exec 'term ' . gd_exe . ' --screen 2 --resolution 1200x688 -t --path '.path
+            exec 'term ' . s:godot_exe . ' --screen 2 -t --path '.path
+            " exec 'term ' . s:godot_exe . ' --screen 2 --resolution 1200x688 -t --path '.path
         else
-            exec 'term ' . gd_exe . ' --screen 2 --resolution 1200x688 -t --path '.path
+            exec 'term ' . s:godot_exe . ' --screen 2 -t --path '.path
+            " exec 'term ' . s:godot_exe . ' --screen 2 --resolution 1200x688 -t --path '.path
         endif
     else
         echom 'RunGodot: Not in godot project directory!'
@@ -291,15 +291,39 @@ func! RunCurrentScene()
     end
     let scene_path = FindCurrentScene()
     if scene_path isnot 0
-        exec 'term godot4 --resolution 1200x688 --position 1070,750 -t --path '. project_path . ' ' . scene_path
+        exec 'term ' . s:godot_exe . ' -t --path '. project_path . ' ' . scene_path
     else
-        echom 'RunCurrentScene: Scene not found!'
+        let test_scene = FindCurrentTestScene()
+        if test_scene isnot 0
+            exec 'term ' . s:godot_exe . ' -t --path '. project_path . ' ' . test_scene ' -- -f ' . expand('%:p')
+            " exec 'term ' . s:godot_exe . ' -t --path '. project_path . ' ' . test_scene
+        else
+            " echom 'RunCurrentScene: Scene not found!'
+            call RunCurrentGodot(0)
+        endif
     end
 endfun
 function! FindCurrentScene()
     let currentScene = expand('%:p:r') . '.tscn'
     if filereadable(currentScene)
         return currentScene
+    else
+        return 0
+    endif
+endfunction
+function! FindCurrentTestScene()
+    if expand('%:t:r') =~ '^test_'
+        " let test_scn = expand('%:p:h') . '/test.tscn'
+        let test_scn = FindProjectFile("test.tscn")
+        if test_scn is 0
+            return 0
+        else
+            if filereadable(test_scn)
+                return test_scn
+            else
+                return 0
+            endif
+        endif
     else
         return 0
     endif
@@ -316,12 +340,94 @@ function! FindProjectRoot(lookFor)
     return 0
 endfunction
 
+function! FindProjectFile(lookFor)
+    let pathMaker='%:p'
+    while(len(expand(pathMaker))>len(expand(pathMaker.':h')))
+        let pathMaker=pathMaker.':h'
+        let fileToCheck=expand(pathMaker).'/'.a:lookFor
+        if filereadable(fileToCheck)||isdirectory(fileToCheck)
+            return expand(pathMaker) . '/' . a:lookFor
+        endif
+    endwhile
+    return 0
+endfunction
+
+function! GetProjectName()
+    let projectRoot = FindProjectRoot("project.godot")
+    if projectRoot is 0
+        " echom "未找到项目根目录"
+        return 0
+    endif
+
+    let projectFile = projectRoot . '/project.godot'
+    if !filereadable(projectFile)
+        " echom "未找到project.godot文件"
+        return 0
+    endif
+
+    let lines = readfile(projectFile)
+    let projectName = ""
+
+    let inApplicationSection = 0
+    for line in lines
+        if line =~ '^\[application\]'
+            let inApplicationSection = 1
+        elseif inApplicationSection && line =~ '^config/name='
+            let projectName = substitute(line, '^config/name="\(.*\)"', '\1', '')
+            break
+        endif
+    endfor
+
+    if projectName == ""
+        " echom "未找到项目名称"
+        return 0
+    endif
+
+    return projectName
+endfunction
+
+" nnoremap <silent><leader>gd :echom GetProjectName()<CR>
+function! OpenProjectUserDir()
+    let projectName = GetProjectName()
+    if projectName is 0
+        " echo "无法获取项目名称"
+        return
+    endif
+
+    let userDir = ""
+    if g:os.is_mac
+        let userDir = expand("~/Library/Application Support/Godot/app_userdata/" . projectName)
+    else
+        let userDir = expand("~/.local/share/godot/app_userdata/" . projectName)
+    endif
+
+    if !isdirectory(userDir)
+        " echo "用户数据目录不存在: " . userDir
+        return
+    endif
+
+    " 使用Vim的命令打开目录
+    execute "!open '" . userDir . "'"
+endfunction
+nnoremap <silent><leader>gu :call OpenProjectUserDir()<CR>
+
+function! OpenProjectDir()
+    let projectRoot = FindProjectRoot("project.godot")
+    if projectRoot is 0
+        " echom "未找到项目根目录"
+        return 0
+    endif
+    execute "!open '" . projectRoot . "'"
+endfunction
+nnoremap <silent><leader>gd :call OpenProjectDir()<CR>
+
 " set path+=$HOME/.local/bin,$HOME/.pyenv/shims,$HOME/.pyenv/bin
-"
 " create godot project with template 
 " _common directory
 " _2d_common
 " _3d_common
 " _platform_common
 " _bug_common
-"
+
+" there should be a new type of sync file for local system
+" that support cherry pick and dual-sync

@@ -73,7 +73,7 @@ set display+=lastline
 " Folding
 set foldmethod=syntax
 set foldcolumn=0
-set foldlevel=0 
+set foldlevel=1
 set foldlevelstart=1
 set foldopen=block,hor,insert,jump,mark,percent,quickfix,search,tag,undo
 set foldclose=

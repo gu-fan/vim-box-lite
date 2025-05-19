@@ -53,6 +53,7 @@ if g:os.is_windows || g:os.is_linux
     nor <C-Y>       <C-R>zv
     ino <C-Y>       <C-O><C-R><C-O>zv
     vno <C-Y>       <Nop>
+
     " CTRL-A is Select all: 
     " change select mode to visual mode,
     " except insert mode
@@ -66,6 +67,11 @@ if g:os.is_windows || g:os.is_linux
     noremap Y y$
     " noremap <C-Q> :q!<CR>
 
+elseif g:os.is_mac
+    nor <C-Y>       <C-R>zv
+    ino <C-Y>       <C-O><C-R><C-O>zv
+    vno <C-Y>       <Nop>
+    noremap Y y$
 endif
 
 "
@@ -121,6 +127,8 @@ aug au_Filetypes "{{{
     "
     au FileType cs setl fdm=syntax
     autocmd! BufWritePost *.dart call <SID>reload_dart()
+    au FileType rst setl fdls=2
+    au FileType rst setl fdl=2
 
     " CTRL P SET PATH
     " au FileType javascript cal <SID>set_path()
@@ -140,7 +148,7 @@ endfunction
 aug au_Filetypes_gd "{{{
     au!
     au FileType gdscript setl fdm=expr
-    au FileType gdscript setl fdls=0
+    au FileType gdscript setl fdls=1
     au Filetype gdscript setl shiftwidth=4 expandtab tabstop=4 softtabstop=4
     au BufRead,BufNewFile *.gd setl shiftwidth=4 expandtab tabstop=4 softtabstop=4
 	" au FileType gdscript setl foldexpr=getline(v:lnum)=~'^#\\s*--.*--$'
@@ -184,8 +192,6 @@ endfunction "}}}
 " Resize the divisions if the Vim window size changes {{{
 
 au VimResized * exe "normal! \<c-w>="
-
-
 
 " Execution permissions by default to shebang (#!) files {{{
 
