@@ -237,7 +237,7 @@ let s:godot_exe = 'godot'
 " let s:godot_exe = 'godotdev'
 if g:os.is_mac
     " let s:godot_exe = '/Applications/Godot.app/Contents/MacOS/Godot'
-    let s:godot_exe = '/Users/xrak/dev/godot_dev_4.4/bin/Godot.app/Contents/MacOS/Godot'
+    let s:godot_exe = '/Users/xrak/dev/godot_dev_4.4/bin/Godot.app/Contents/MacOS/Godot --screen 2'
 elseif g:os.is_linux
     let s:godot_exe = '/home/xrak/bin/godot --resolution 1200x720'
 endif
@@ -275,10 +275,10 @@ func! RunCurrentGodot(pos=0)
     if path isnot 0
         if a:pos is 0
             " --debug-collisions
-            exec 'term ' . s:godot_exe . ' --screen 2 -t --path '.path
+            exec 'term ' . s:godot_exe . ' -t --path '.path
             " exec 'term ' . s:godot_exe . ' --screen 2 --resolution 1200x688 -t --path '.path
         else
-            exec 'term ' . s:godot_exe . ' --screen 2 -t --path '.path
+            exec 'term ' . s:godot_exe . ' -t --path '.path
             " exec 'term ' . s:godot_exe . ' --screen 2 --resolution 1200x688 -t --path '.path
         endif
     else
