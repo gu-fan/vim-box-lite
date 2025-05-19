@@ -238,6 +238,8 @@ let s:godot_exe = 'godot'
 if g:os.is_mac
     " let s:godot_exe = '/Applications/Godot.app/Contents/MacOS/Godot'
     let s:godot_exe = '/Users/xrak/dev/godot_dev_4.4/bin/Godot.app/Contents/MacOS/Godot'
+elseif g:os.is_linux
+    let s:godot_exe = '/home/xrak/bin/godot --resolution 1200x720'
 endif
 
 " nnoremap <silent> <leader>jj :term godot4 --resolution 900x480 --position 2070,750 -t --path /home/ryk/jams/survivor<CR>
