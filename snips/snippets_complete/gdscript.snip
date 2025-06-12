@@ -1,4 +1,8 @@
 # vim: set list : 
+
+snippet     vec
+    Vector2(10, 10)
+
 snippet     for
 abbr        for ... in ...: ...
 options     head
@@ -29,7 +33,11 @@ options     word
 
 snippet     .cust
 options     word
-    .custom_minimum_size = Vector2(${0:40,40})
+    .custom_minimum_size = Vector2(${0:100,100})
+
+snippet     'cust
+options     word
+    'custom_minimum_size' : Vector2(${0:100,100}),
 
 snippet     .horz
 options     word
@@ -99,7 +107,7 @@ snippet    .set_sep
 options     word
     .set('theme_override_constants/separation', ${0:10})
 
-snippet    sep
+snippet    'sep
 options     head
     "theme_override_constants/separation": 1,
 
@@ -146,6 +154,18 @@ options     word
 snippet .size_vert
 options     word
     .size_flags_vertical = Control.SIZE_EXPAND_FILL
+
+snippet 'size_horz
+options     word
+    'size_flags_horizontal' : Control.SIZE_EXPAND_FILL,
+snippet 'size_vert
+options     word
+    'size_flags_vertical' : Control.SIZE_EXPAND_FILL,
+snippet     'preset
+alias 'pres
+    'preset': Control.PRESET_FULL_RECT,
+
+
 
 snippet test
     extends CanvasLayer
@@ -225,49 +245,84 @@ options     head
 	area.add_child(collision_shape)
 	area.body_entered.connect(func(body): ${2:print(body.name)})
 	add_child(area)	
+
 snippet     global
     path = ProjectSettings.globalize_path(path)
-
 
 snippet     preset
 	node.set_anchors_preset(Control.PRESET_FULL_RECT)
 	node.set_offsets_preset(Control.PRESET_FULL_RECT, 3)
 
+snippet     uirect
+    {
+        		'type': 'ColorRect',
+        		'custom_minimum_size': Vector2(20, 20),
+    	},
+snippet     uibox
+    {
+        		'type': 'HBoxContainer',
+        		'custom_minimum_size': Vector2(10, 10),
+        		'theme_override_constants/separation': 0,
+        		'children': [],
+    	},
 snippet     uicon
     {
-        		"type": "Control",
-        		"custom_minimum_size": Vector2(10, 10),
+        		'type': 'Control',
+        		'custom_minimum_size': Vector2(10, 10),
     	},
 snippet     uilabel
     {
-        		"type": "Label",
-        		"text": "Text",
-        		"horizontal_alignment": HORIZONTAL_ALIGNMENT_CENTER,
-        		"custom_minimum_size": Vector2(100, 20),
-        		"font_size": 18,
+        		'type': 'Label',
+        		'text': 'Text',
+        		'horizontal_alignment': HORIZONTAL_ALIGNMENT_CENTER,
+        		'custom_minimum_size': Vector2(100, 20),
+        		'font_size': 18,
+    	},
+snippet     uisep
+    {
+        		'type': 'HSeparator',
+        		'custom_minimum_size': Vector2(100, 20),
+    	},
+snippet     uiinput
+    {
+        		'type': 'LineEdit',
+        		'text': 'Text',
+        		'alignment': HORIZONTAL_ALIGNMENT_CENTER,
+        		'custom_minimum_size': Vector2(100, 20),
+        		'font_size': 18,
+    	},
+snippet     uibtn
+    {
+        		'type': 'Button',
+        		'text': 'Text',
+        		'custom_minimum_size': Vector2(100, 20),
+    	},
+snippet     uiready
+    'connect': {
+        		'node_ready': func(nd): print(nd.size)
     	},
 
 snippet     uimargin
     {
-        		"type": "MarginContainer",
-        		"margin":{
-            			"left": 5,
+        		'type': 'MarginContainer',
+        		'margin':{
+            			'left': 5,
         		},
-        		"child": {
+        		'child': {
         		}
     	},
 
 snippet     uipanel
     {
-        		"type": "PanelContainer",
-        		"custom_minimum_size": Vector2(0, 30),
-        		"style": {
-            			"bg_color": Color(0.15, 0.15, 0.15, 1),
-            			"border_color": Color(0.3, 0.3, 0.3, 1.0),
-            			"border_width": 2,
-            			"corner_radius": 5,
-            			"content_margin":2,
+        		'type': 'PanelContainer',
+        		'custom_minimum_size': Vector2(0, 30),
+        		'style': {
+            			'bg_color': Color(0.15, 0.15, 0.15, 1),
+            			'border_color': Color(0.3, 0.3, 0.3, 1.0),
+            			'border_width': 2,
+            			'corner_radius': 5,
+            			'content_margin':2,
         		},
-        		"child": {
+        		'child': {
         		}
     	},

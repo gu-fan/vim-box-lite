@@ -265,7 +265,7 @@ nnoremap <silent><leader>gf :call RunCurrentScene()<CR>
 func! ImportCurrentGodot()
     let path = FindProjectRoot('project.godot')
     if path isnot 0
-        exec 'term godot4 --import --path '.path
+        exec 'term '.s:godot_exe . ' --import --path '.path
     else
         echom 'ImportGodot: Not in godot project directory!'
     end
@@ -293,11 +293,11 @@ func! RunCurrentScene()
     end
     let scene_path = FindCurrentScene()
     if scene_path isnot 0
-        exec 'term ' . s:godot_exe . ' -t --path '. project_path . ' ' . scene_path
+        exec 'term ' . s:godot_exe . ' --path '. project_path . ' ' . scene_path
     else
         let test_scene = FindCurrentTestScene()
         if test_scene isnot 0
-            exec 'term ' . s:godot_exe . ' -t --path '. project_path . ' ' . test_scene ' -- -f ' . expand('%:p')
+            exec 'term ' . s:godot_exe . ' --path '. project_path . ' ' . test_scene ' -- -f ' . expand('%:p')
             " exec 'term ' . s:godot_exe . ' -t --path '. project_path . ' ' . test_scene
         else
             " echom 'RunCurrentScene: Scene not found!'
