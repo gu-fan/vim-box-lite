@@ -33,11 +33,11 @@ options     word
 
 snippet     .cust
 options     word
-    .custom_minimum_size = Vector2(${0:100,100})
+    .custom_minimum_size = Vector2(${0:10,10})
 
 snippet     'cust
 options     word
-    'custom_minimum_size' : Vector2(${0:100,100}),
+    'custom_minimum_size' : Vector2(${0:10,10}),
 
 snippet     .horz
 options     word
@@ -87,13 +87,21 @@ options     word
 snippet     .set_style
 options     word
     .set("theme_override_styles/panel", style)
-
+snippet     .style
+options     word
+    .set("theme_override_styles/panel", style)
+snippet     .font_size
+options     word
+    .set("theme_override_font_sizes/font_size", 16)
 snippet     .set_font_size
 options     word
     .set("theme_override_font_sizes/font_size", 16)
 snippet     font_size
 options    head 
     "theme_override_font_sizes/font_size": 16,
+snippet     .font_color
+options     word
+    .set("theme_override_colors/font_color", '33FF33')
 snippet     .set_font_color
 options     word
     .set("theme_override_colors/font_color", '33FF33')

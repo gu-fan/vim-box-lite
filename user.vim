@@ -297,6 +297,7 @@ func! RunCurrentScene()
     else
         let test_scene = FindCurrentTestScene()
         if test_scene isnot 0
+            " exec 'term ' . s:godot_exe . ' --path '. project_path . ' ' . test_scene ' --headless --quit -- -f ' . expand('%:p')
             exec 'term ' . s:godot_exe . ' --path '. project_path . ' ' . test_scene ' -- -f ' . expand('%:p')
             " exec 'term ' . s:godot_exe . ' -t --path '. project_path . ' ' . test_scene
         else
@@ -315,21 +316,21 @@ function! FindCurrentScene()
 endfunction
 function! FindCurrentTestScene()
     if expand('%:t:r') =~ '^test_'
-        " let test_scn = expand('%:p:h') . '/test.tscn'
-        let test_scn = FindProjectFile("test.tscn")
-        if test_scn is 0
+        let projectRoot = FindProjectRoot("project.godot")
+        if projectRoot is 0
             return 0
+        endif
+        
+        let test_scn = projectRoot . "/tests/test.tscn"
+        if filereadable(test_scn)
+            return test_scn
         else
-            if filereadable(test_scn)
-                return test_scn
-            else
-                return 0
-            endif
+            return 0
         endif
     else
         return 0
     endif
-endfunction
+endfunction 
 function! FindProjectRoot(lookFor)
     let pathMaker='%:p'
     while(len(expand(pathMaker))>len(expand(pathMaker.':h')))
@@ -409,7 +410,7 @@ function! OpenProjectUserDir()
     endif
 
     " 使用Vim的命令打开目录
-    execute "!open '" . userDir . "'"
+    sil! execute "!open '" . userDir . "'"
 endfunction
 nnoremap <silent><leader>gu :call OpenProjectUserDir()<CR>
 
@@ -419,7 +420,7 @@ function! OpenProjectDir()
         " echom "未找到项目根目录"
         return 0
     endif
-    execute "!open '" . projectRoot . "'"
+    sil! execute "!open '" . projectRoot . "'"
 endfunction
 nnoremap <silent><leader>gd :call OpenProjectDir()<CR>
 

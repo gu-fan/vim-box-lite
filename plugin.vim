@@ -14,6 +14,7 @@ au BufRead,BufNewFile,BufReadPre *.coffee   set filetype=coffee
 
 Plug 'jparise/vim-graphql'
 " Plug 'HerringtonDarkholme/yats.vim'
+Plug 'mileszs/ack.vim'
 
 " Plug 'mxw/vim-jsx'
 " let g:jsx_ext_required = 1
