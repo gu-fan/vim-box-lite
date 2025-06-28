@@ -70,10 +70,9 @@ command! -bang -nargs=* GGrep
 " ===== Plugin Configurations =====
 " Startify
 let g:startify_bookmarks = [
-    \{'p25':'~/godot/p25_test/README.rst'},
-    \{'s2':'~/godot/SLG_P2/temp/Arena.gd'},
-    \{'slg':'~/godot/pixel_slg/builders/Battle/BattleCtrl_v2.gd' },
-    \{'video':'~/godot/video_runner/README.rst'},
+    \{'type':'~/jams/wildtype2/README.rst'},
+    \{'rpg':'~/jams/autorpg2/README.rst'},
+    \{'video':'~/jams/videorunner3/README.rst'},
     \]
 
 " Lightline

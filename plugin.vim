@@ -10,7 +10,7 @@ Plug 'wellle/targets.vim'
 Plug 'groenewege/vim-less'
 Plug 'kchmck/vim-coffee-script'
 
-au BufRead,BufNewFile,BufReadPre *.coffee   set filetype=coffee
+au BufRead,BufNewFile,BufReadPre *.coffee  set filetype=coffee
 
 Plug 'jparise/vim-graphql'
 " Plug 'HerringtonDarkholme/yats.vim'

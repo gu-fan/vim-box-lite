@@ -365,6 +365,10 @@ nno <C-W>N <C-W>n
 " should replace with click.vim
 fun! s:edit_file(ask)
     let file = expand('<cfile>')
+    if file == "\\" || file == "\\\\"
+        return
+    endif
+
     let ptn ='\v(%(file|https=|ftp|gopher)://|%(mailto|news):)([0-9a-zA-Z#&?._-~/]*)'
     let links = matchlist(file,ptn)
     if !empty(links)

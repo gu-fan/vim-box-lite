@@ -42,10 +42,16 @@ options     word
 snippet     .horz
 options     word
     .horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+snippet     'horz
+options     word
+    'horizontal_alignment' : HORIZONTAL_ALIGNMENT_CENTER,
 
 snippet     .vert
 options     word
     .vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+snippet     'vert
+options     word
+    'vertical_alignment' : VERTICAL_ALIGNMENT_CENTER,
 
 snippet     wait
 options     head
@@ -90,6 +96,14 @@ options     word
 snippet     .style
 options     word
     .set("theme_override_styles/panel", style)
+
+snippet     .font_shadow_size
+options     word
+    .set("theme_override_constants/shadow_offset_x", 2)
+    	node.set("theme_override_constants/shadow_offset_y", 2)
+snippet     .font_shadow
+options     word
+    .set("theme_override_colors/font_shadow_color", "111111")
 snippet     .font_size
 options     word
     .set("theme_override_font_sizes/font_size", 16)
@@ -313,23 +327,28 @@ snippet     uiready
 snippet     uimargin
     {
         		'type': 'MarginContainer',
-        		'margin':{
-            			'left': 5,
-        		},
+        		'theme_override_constants/margin_left': 20,
+        		'theme_override_constants/margin_right': 20,
         		'child': {
         		}
     	},
-
+snippet uistyle
+    'style': {
+        		'bg_color': COLORS.gray,
+        		'content_margin':2,
+        		'border_color': COLORS.white,
+        		'border_width': 2,
+    	},
 snippet     uipanel
     {
         		'type': 'PanelContainer',
         		'custom_minimum_size': Vector2(0, 30),
         		'style': {
-            			'bg_color': Color(0.15, 0.15, 0.15, 1),
-            			'border_color': Color(0.3, 0.3, 0.3, 1.0),
-            			'border_width': 2,
-            			'corner_radius': 5,
-            			'content_margin':2,
+            			'bg_color': COLORS.primary,
+            			'content_margin': 5,
+            			'shadow_color': COLORS.black,
+            			'shadow_size': 1,
+            			'shadow_offset': Vector2(1, 1),
         		},
         		'child': {
         		}
