@@ -314,8 +314,8 @@ nno   s          <Nop>
 nno   S          <Nop>
 nno   c          <Nop>
 nno   Q          <Nop>
-nno   q          <Nop>
-nno   gq         q
+" nno   q          <Nop>
+" nno   gq         q
 nno   <nowait> q:      :
 
 

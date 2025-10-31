@@ -31,9 +31,9 @@ snippet     v3i
 options     word
 	Vector3i(${0})
 
-snippet     .cust
+snippet     cust
 options     word
-    .custom_minimum_size = Vector2(${0:10,10})
+    custom_minimum_size = Vector2(${0:10,10})
 
 snippet     'cust
 options     word
@@ -90,9 +90,6 @@ snippet     .focus_none
 options     word
     .focus_mode = Control.FOCUS_NONE
 
-snippet     .set_style
-options     word
-    .set("theme_override_styles/panel", style)
 snippet     .style
 options     word
     .set("theme_override_styles/panel", style)
@@ -107,25 +104,19 @@ options     word
 snippet     .font_size
 options     word
     .set("theme_override_font_sizes/font_size", 16)
-snippet     .set_font_size
-options     word
-    .set("theme_override_font_sizes/font_size", 16)
 snippet     font_size
 options    head 
     "theme_override_font_sizes/font_size": 16,
 snippet     .font_color
 options     word
     .set("theme_override_colors/font_color", '33FF33')
-snippet     .set_font_color
-options     word
-    .set("theme_override_colors/font_color", '33FF33')
 snippet     font_color
 options     head
     "theme_override_colors/font_color": '33FF33',
-snippet     .set_font
+snippet     .font
 options     word
     .set("theme_override_fonts/font", font)
-snippet    .set_sep
+snippet    .sep
 options     word
     .set('theme_override_constants/separation', ${0:10})
 
@@ -353,3 +344,49 @@ snippet     uipanel
         		'child': {
         		}
     	},
+snippet     uiready
+    'ready': func(nd): print(nd, nd.size),
+
+snippet     uireadywait
+    'ready': func(nd): await get_tree().process_frame;print(nd, nd.size),
+
+snippet pre_full
+options     word
+    set_anchors_preset(Control.PRESET_FULL_RECT)
+
+
+snippet tpl_screen
+    extends Node2D
+    
+    var canvas
+    var con
+    
+    func _ready():
+        		canvas = CanvasLayer.new()
+        		add_child(canvas)
+    
+        		con = Control.new()
+        		con.set_anchors_preset(Control.PRESET_FULL_RECT)
+        		canvas.add_child(con)
+    
+        		var rect = ColorRect.new()
+        		rect.color = Color.BLACK
+        		rect.custom_minimum_size = Vector2(100, 100)
+        		rect.set_anchors_preset(Control.PRESET_FULL_RECT)
+        		con.add_child(rect)
+    
+        		var label = Label.new()
+        		label.set("theme_override_font_sizes/font_size", 40)
+        		label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+        		label.set("theme_override_colors/font_color", Color.WHITE)
+        		label.text = "TPL_SCREEN"
+        		UI.set_layout(label, UI.PRESET_BOTTOM_LEFT, Vector2(10, 10))
+        		con.add_child(label)
+    
+        		var btn = Button.new()
+        		btn.text = "TPL_NEXT"
+        		btn.set("theme_override_font_sizes/font_size", 40)
+        		btn.pressed.connect(print.bind("Next"))
+        		UI.set_layout(btn, UI.PRESET_BOTTOM_RIGHT, Vector2(10, 10))
+        		con.add_child(btn)
+    

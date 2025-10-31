@@ -1368,8 +1368,6 @@ set timeoutlen=500
 " \   'gdscript': ['gdlint'],
 " \}
 " Plug 'maxbrunsfeld/vim-yankstack'
-"
-
 
 " Plug 'prabirshrestha/vim-lsp'
 
@@ -1384,7 +1382,6 @@ if has("nvim")
   " Plug 'nvzone/timerly' , {'on': ['TimerlyToggle']}
   Plug 'nvzone/timerly'
 endif
-
 
 Plug '~/vim/moon'
 

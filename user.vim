@@ -24,6 +24,8 @@ nno <silent> <leader>zz @=(&foldlevel?'zM':'zR')<CR>
 " Yank and paste with a specific register
 nnoremap <leader>yy "jyy
 nnoremap <leader>pp "jp
+nnoremap <leader>go :GitGutterDiffOrig<CR>
+
 
 " Increment/Decrement
 vnoremap + <C-A>
@@ -36,6 +38,11 @@ noremap <c-3> <c-a>
 noremap <c-4> <c-x>
 vnoremap <c-3> <c-a>
 vnoremap <c-4> <c-x>
+
+nnoremap L w
+nnoremap H b
+nnoremap J 5j
+nnoremap K 5k
 
 nnoremap <M-j> :m .+1<CR>==
 nnoremap <M-k> :m .-2<CR>==
@@ -274,10 +281,10 @@ func! RunCurrentGodot(pos=0)
     if path isnot 0
         if a:pos is 0
             " --debug-collisions
-            exec 'term ' . s:godot_exe . ' -t --path '.path
+            exec 'term ' . s:godot_exe . ' --path '.path
             " exec 'term ' . s:godot_exe . ' --screen 2 --resolution 1200x688 -t --path '.path
         else
-            exec 'term ' . s:godot_exe . ' -t --path '.path
+            exec 'term ' . s:godot_exe . ' --path '.path
             " exec 'term ' . s:godot_exe . ' --screen 2 --resolution 1200x688 -t --path '.path
         endif
     else
@@ -314,7 +321,7 @@ function! FindCurrentScene()
     endif
 endfunction
 function! FindCurrentTestScene()
-    if expand('%:t:r') =~ '^test_'
+    if expand('%:t:r') =~ '^test_' || expand('%:t:r') =~ '^demo_'
         let projectRoot = FindProjectRoot("project.godot")
         if projectRoot is 0
             return 0
